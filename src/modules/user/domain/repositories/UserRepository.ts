@@ -1,6 +1,6 @@
 import { IUserRepository } from '../repositories/IUserRepository';
 import { User } from '../entities/User';
-import { prisma } from '../../../../infra/prismaClient';
+import { prisma } from '../../../../infra/database/prismaClient';
 
 export class UserRepository implements IUserRepository {
   

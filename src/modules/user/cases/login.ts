@@ -1,6 +1,6 @@
 import { IUserRepository } from '../domain/repositories/IUserRepository';
 import { User } from '../domain/entities/User';
-import { JWTProvider } from '../providers/JWTProvider';
+import { JWTProvider } from '../../../infra/providers/JWTProvider';
 import bcrypt from 'bcrypt';
 
 interface LoginDTO {
