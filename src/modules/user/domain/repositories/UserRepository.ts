@@ -1,5 +1,6 @@
 import { IUserRepository } from '../repositories/IUserRepository';
 import { User } from '../entities/User';
+import { UpdateUserRequest } from '../entities/@types/UpdateUserRequest';
 import { prisma } from '../../../../infra/database/prismaClient';
 
 export class UserRepository implements IUserRepository {
@@ -36,6 +37,20 @@ export class UserRepository implements IUserRepository {
     if (!data) {
       return null;
     }
+
+    return data;
+  }
+
+  async update(updateUser: UpdateUserRequest, id: string): Promise<User> {
+    const { name, email, password } = updateUser;
+    const data = await prisma.user.update({
+      where: { id },
+      data: {
+        name,
+        email,
+        password
+      }
+    });
 
     return data;
   }

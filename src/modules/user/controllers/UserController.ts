@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { CreateUser } from '../cases';
+import { CreateUser, UpdateUser } from '../cases';
 import { UserRepository } from '../domain/repositories/UserRepository';
 
 export class UserController {
@@ -15,6 +15,19 @@ export class UserController {
             
         } catch (error: any) {
             return res.status(400).json({error: error.message});
+        }
+    }
+
+    async update (req: Request, res: Response) {
+        const { id } = req.params;
+        const { name, email, password } = req.body;
+
+        try {
+            const updateUser = new UpdateUser(this.userRepository);
+            const result = await updateUser.update({ name, email, password }, id);
+            return res.status(200).json(result);
+        } catch (error: any) {
+            return res.status(400).json({ error: error.message });
         }
     }
 }

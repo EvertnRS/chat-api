@@ -27,7 +27,6 @@ export class Login {
         }
 
         const token = new JWTProvider().sign({ id: user.id });
-        console.log(token)
 
         return { token };
     }
