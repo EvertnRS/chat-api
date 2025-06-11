@@ -1,4 +1,5 @@
 import { IUserRepository } from '../domain/repositories/IUserRepository';
+import type { CreateUserRequest } from '../../../@types/CreateUserRequest';
 import { User } from '../domain/entities/User';
 import bcrypt from 'bcrypt';
 
@@ -22,7 +23,12 @@ export class CreateUser {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
+        const registerData: CreateUserRequest = {
+            name,
+            email,
+            hashedPassword: hashedPassword
+        };
         
-        return await this.userRepository.save(name, email, hashedPassword);
+        return await this.userRepository.save(registerData);
     }
 }

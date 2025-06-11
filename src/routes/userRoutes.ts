@@ -10,5 +10,6 @@ const authController = new AuthController();
 router.post('/signup', (req, res) => {userController.register(req, res)});
 router.post('/login', (req, res) => {authController.login(req, res)});
 router.put('/users/update/:id', authenticateToken, (req, res) =>{ userController.update(req, res)});
+router.delete('/users/delete/:id', authenticateToken, (req, res) =>{ userController.delete(req, res)});
 
 export default router;
