@@ -1,5 +1,5 @@
 import { IUserRepository } from '../domain/repositories/IUserRepository';
-import type { UpdateUserRequest } from '../domain/entities/@types/UpdateUserRequest';
+import type { UpdateUserRequest } from '../../../@types/UpdateUserRequest';
 import bcrypt from 'bcrypt';
 
 export class UpdateUser {

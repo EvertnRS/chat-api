@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { CreateUser, UpdateUser } from '../cases';
+import { CreateUser, UpdateUser, DeleteUser } from '../cases';
 import { UserRepository } from '../domain/repositories/UserRepository';
 
 export class UserController {
@@ -26,6 +26,20 @@ export class UserController {
             const updateUser = new UpdateUser(this.userRepository);
             const result = await updateUser.update({ name, email, password }, id);
             return res.status(200).json(result);
+        } catch (error: any) {
+            return res.status(400).json({ error: error.message });
+        }
+    }
+
+    async delete (req: Request, res: Response) {
+        const { id } = req.params;
+        const { password } = req.body;
+
+        try {
+            const deleteUser = new DeleteUser(this.userRepository);
+            await deleteUser.delete(password, id);
+            return res.status(204).json();
+            
         } catch (error: any) {
             return res.status(400).json({ error: error.message });
         }
