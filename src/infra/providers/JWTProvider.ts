@@ -1,6 +1,7 @@
 import jwt from  'jsonwebtoken';
+import { IAuthProvider } from './IAuthProvider';
 
-export class JWTProvider{
+export class JWTProvider implements IAuthProvider {
     private readonly secretKey: string;
 
     constructor() {

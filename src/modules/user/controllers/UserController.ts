@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import { CreateUser, UpdateUser, DeleteUser } from '../cases';
-import { UserRepository } from '../domain/repositories/UserRepository';
+import { IUserRepository } from '../domain/repositories/IUserRepository';
 
 export class UserController {
-    private readonly userRepository = new UserRepository();
+    constructor(
+            private readonly userRepository: IUserRepository,
+        ) {}
     
     async register (req: Request, res: Response) {
         const { name, email, password } = req.body;
