@@ -600,7 +600,7 @@ export namespace Prisma {
 
 
   export type Datasources = {
-    db?: Datasource
+    postgres?: Datasource
   }
 
   interface TypeMapCb<ClientOptions = {}> extends $Utils.Fn<{extArgs: $Extensions.InternalArgs }, $Utils.Record<string, any>> {

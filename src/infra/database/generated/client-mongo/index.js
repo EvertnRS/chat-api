@@ -126,13 +126,13 @@ exports.Prisma.ModelName = {
  */
 const config = {
   "generator": {
-    "name": "client",
+    "name": "client_mongo",
     "provider": {
       "fromEnvVar": null,
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\kaiod\\Desktop\\Computação\\JavaScript\\chat-api\\src\\infra\\database\\generated\\client-mongo",
+      "value": "D:\\projetos\\chat-api\\src\\infra\\database\\generated\\client-mongo",
       "fromEnvVar": null
     },
     "config": {
@@ -146,31 +146,31 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\kaiod\\Desktop\\Computação\\JavaScript\\chat-api\\prisma\\schema.mongo.prisma",
+    "sourceFilePath": "D:\\projetos\\chat-api\\prisma\\schema.mongo.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../../../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../../../../.env"
   },
   "relativePath": "../../../../../prisma",
   "clientVersion": "6.9.0",
   "engineVersion": "81e4af48011447c3cc503a190e86995b66d2a28e",
   "datasourceNames": [
-    "db"
+    "mongodb"
   ],
   "activeProvider": "mongodb",
   "postinstall": false,
   "inlineDatasources": {
-    "db": {
+    "mongodb": {
       "url": {
         "fromEnvVar": "MONGO_DATABASE_URL",
         "value": null
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/infra/database/generated/client-mongo\"\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"MONGO_DATABASE_URL\")\n}\n\nmodel chat {\n  id           String   @id @default(uuid()) @map(\"_id\")\n  name         String\n  description  String?\n  photo        String?\n  participants String[]\n  createdAt    DateTime @default(now())\n}\n\nmodel message {\n  id        String   @id @default(uuid()) @map(\"_id\")\n  sender    String // Postgres user id\n  recipient String // Mongo chat id\n  text      String?\n  image     String?\n  video     String?\n  audio     String?\n  sentAt    DateTime @default(now())\n}\n",
-  "inlineSchemaHash": "e1828308c664078795641c53f705ecdb88eb215dd79e8a90f702d019c3747fcb",
+  "inlineSchema": "generator client_mongo {\n  provider = \"prisma-client-js\"\n  output   = \"../src/infra/database/generated/client-mongo\"\n}\n\ndatasource mongodb {\n  provider = \"mongodb\"\n  url      = env(\"MONGO_DATABASE_URL\")\n}\n\nmodel chat {\n  id           String   @id @default(uuid()) @map(\"_id\")\n  name         String\n  description  String?\n  photo        String?\n  participants String[]\n  createdAt    DateTime @default(now())\n}\n\nmodel message {\n  id        String   @id @default(uuid()) @map(\"_id\")\n  sender    String // Postgres user id\n  recipient String // Mongo chat id\n  text      String?\n  image     String?\n  video     String?\n  audio     String?\n  sentAt    DateTime @default(now())\n}\n",
+  "inlineSchemaHash": "5392b058316a1cf6fe44ad08d7a042a720e9d01e497eaf7f540b5739dbeae66b",
   "copyEngine": true
 }
 

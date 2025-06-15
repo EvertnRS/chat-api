@@ -2,13 +2,13 @@ import { IUserRepository } from '../repositories/IUserRepository';
 import { User } from '../entities/User';
 import { UpdateUserRequest } from '../../../../@types/UpdateUserRequest';
 import type { CreateUserRequest } from '../../../../@types/CreateUserRequest';
-import { prisma } from '../../../../infra/database/prismaClient';
+import { postgres } from '../../../../infra/database/prismaClient';
 
 export class UserRepository implements IUserRepository {
   
   async save(createUser: CreateUserRequest): Promise<User> {
     const { name, email, hashedPassword } = createUser;
-    const data = await prisma.user.create({
+    const data = await postgres.user.create({
       data: {
         name,
         email,
@@ -21,7 +21,7 @@ export class UserRepository implements IUserRepository {
   
   async update(updateUser: UpdateUserRequest, id: string): Promise<User> {
     const { name, email, password } = updateUser;
-    const data = await prisma.user.update({
+    const data = await postgres.user.update({
       where: { id },
       data: {
         name,
@@ -34,12 +34,12 @@ export class UserRepository implements IUserRepository {
   }
 
 async delete (id: string): Promise<void> {
-    await prisma.user.delete({
+    await postgres.user.delete({
       where: { id }});
     }
 
   async findByEmail(email: string): Promise<User | null> {
-    const data = await prisma.user.findUnique({
+    const data = await postgres.user.findUnique({
       where: { email }
     });
 
@@ -51,7 +51,7 @@ async delete (id: string): Promise<void> {
   }
 
   async findById(id: string): Promise<User | null> {
-    const data = await prisma.user.findUnique({
+    const data = await postgres.user.findUnique({
       where: { id }
     });
 

@@ -118,13 +118,13 @@ exports.Prisma.ModelName = {
  */
 const config = {
   "generator": {
-    "name": "client",
+    "name": "client_postgres",
     "provider": {
       "fromEnvVar": null,
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\kaiod\\Desktop\\Computação\\JavaScript\\chat-api\\src\\infra\\database\\generated\\client-postgres",
+      "value": "D:\\projetos\\chat-api\\src\\infra\\database\\generated\\client-postgres",
       "fromEnvVar": null
     },
     "config": {
@@ -138,31 +138,31 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\kaiod\\Desktop\\Computação\\JavaScript\\chat-api\\prisma\\schema.postgres.prisma",
+    "sourceFilePath": "D:\\projetos\\chat-api\\prisma\\schema.postgres.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../../../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../../../../.env"
   },
   "relativePath": "../../../../../prisma",
   "clientVersion": "6.9.0",
   "engineVersion": "81e4af48011447c3cc503a190e86995b66d2a28e",
   "datasourceNames": [
-    "db"
+    "postgres"
   ],
   "activeProvider": "postgresql",
   "postinstall": false,
   "inlineDatasources": {
-    "db": {
+    "postgres": {
       "url": {
         "fromEnvVar": "POSTGRES_DATABASE_URL",
         "value": null
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/infra/database/generated/client-postgres\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"POSTGRES_DATABASE_URL\")\n}\n\nmodel User {\n  id       String @id @default(uuid())\n  name     String\n  email    String @unique\n  password String\n}\n",
-  "inlineSchemaHash": "651148eb32a489b43a0f6d994e30cb7623f14138fdaa5675c58a6af4e8ddb5ed",
+  "inlineSchema": "generator client_postgres {\n  provider = \"prisma-client-js\"\n  output   = \"../src/infra/database/generated/client-postgres\"\n}\n\ndatasource postgres {\n  provider = \"postgresql\"\n  url      = env(\"POSTGRES_DATABASE_URL\")\n}\n\nmodel User {\n  id       String @id @default(uuid())\n  name     String\n  email    String @unique\n  password String\n}\n",
+  "inlineSchemaHash": "063e2de16d7f53a08c23cd0f0c0f2882745e959dd4640b6e430bebb721ee46f7",
   "copyEngine": true
 }
 config.dirname = '/'
