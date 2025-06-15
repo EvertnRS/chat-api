@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/infra/database/generated/client-mongo"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_DATABASE_URL")
+}
+
+model chat {
+  id           String   @id @default(uuid()) @map("_id")
+  name         String
+  description  String?
+  photo        String?
+  participants String[]
+  createdAt    DateTime @default(now())
+}
+
+model message {
+  id        String   @id @default(uuid()) @map("_id")
+  sender    String // Postgres user id
+  recipient String // Mongo chat id
+  text      String?
+  image     String?
+  video     String?
+  audio     String?
+  sentAt    DateTime @default(now())
+}
