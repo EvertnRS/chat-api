@@ -1,7 +1,7 @@
 import { IUserRepository } from '../repositories/IUserRepository';
 import { User } from '../entities/User';
-import { UpdateUserRequest } from '../../../../@types/UpdateUserRequest';
-import type { CreateUserRequest } from '../../../../@types/CreateUserRequest';
+import { UpdateUserRequest } from '../../../../@types/user/UpdateUserRequest';
+import type { CreateUserRequest } from '../../../../@types/user/CreateUserRequest';
 import { postgres } from '../../../../infra/database/prismaClient';
 
 export class UserRepository implements IUserRepository {
@@ -62,5 +62,15 @@ async delete (id: string): Promise<void> {
     return data;
   }
 
+  async findManyById(ids: string[]): Promise<User[]> {    
+    const data = await postgres.user.findMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    });
 
+    return data;
+  }
 }

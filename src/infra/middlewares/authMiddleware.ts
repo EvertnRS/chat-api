@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { IAuthProvider } from '../providers/IAuthProvider';
+import { IAuthProvider } from '../providers/auth/IAuthProvider';
 
 export function authenticateToken(authProvider: IAuthProvider) {
     return (req: Request, res: Response, next: NextFunction): void => {

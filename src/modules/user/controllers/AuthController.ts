@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Login } from '../cases';
 import { IUserRepository } from '../domain/repositories/IUserRepository';
-import { IAuthProvider } from '../../../infra/providers/IAuthProvider';
+import { IAuthProvider } from '../../../infra/providers/auth/IAuthProvider';
 
 export class AuthController {
     constructor(

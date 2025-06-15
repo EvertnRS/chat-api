@@ -1,6 +1,6 @@
 import { IUserRepository } from '../domain/repositories/IUserRepository';
-import { LoginDTO } from '../../../@types/LoginRequest';
-import { IAuthProvider } from '../../../infra/providers/IAuthProvider';
+import { LoginDTO } from '../../../@types/user/LoginRequest';
+import { IAuthProvider } from '../../../infra/providers/auth/IAuthProvider';
 import bcrypt from 'bcrypt';
 
 

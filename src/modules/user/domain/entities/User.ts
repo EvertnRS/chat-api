@@ -1,3 +1,3 @@
-import type { User as userPrisma }from '@prisma/client';
+import type { User as userPrisma }from '../../../../infra/database/generated/client-postgres';
 
 export type User = userPrisma;

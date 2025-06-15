@@ -145,8 +145,8 @@ exports.Prisma.QueryMode = {
 
 
 exports.Prisma.ModelName = {
-  chat: 'chat',
-  message: 'message'
+  Chat: 'Chat',
+  Message: 'Message'
 };
 
 /**
