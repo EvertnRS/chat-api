@@ -1,13 +1,17 @@
 import { Request, Response } from 'express';
 import { Login } from '../cases';
-import { UserRepository } from '../domain/repositories/UserRepository';
+import { IUserRepository } from '../domain/repositories/IUserRepository';
+import { IAuthProvider } from '../../../infra/providers/IAuthProvider';
 
 export class AuthController {
-    private readonly userRepository = new UserRepository();
+    constructor(
+        private readonly userRepository: IUserRepository,
+        private readonly authProvider: IAuthProvider
+    ) {}
     
     async login (req: Request, res: Response) {
         const { email, password } = req.body;
-        const login = new Login(this.userRepository);
+        const login = new Login(this.userRepository, this.authProvider);
         
         try {
             const result = await login.login({ email, password }); 

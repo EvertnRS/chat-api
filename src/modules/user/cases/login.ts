@@ -1,15 +1,13 @@
 import { IUserRepository } from '../domain/repositories/IUserRepository';
-import { User } from '../domain/entities/User';
-import { JWTProvider } from '../../../infra/providers/JWTProvider';
+import { LoginDTO } from '../../../@types/LoginRequest';
+import { IAuthProvider } from '../../../infra/providers/IAuthProvider';
 import bcrypt from 'bcrypt';
 
-interface LoginDTO {
-  email: string;
-  password: string;
-}
 
 export class Login {
-    constructor (private userRepository: IUserRepository) {}
+    constructor (private userRepository: IUserRepository,
+                 private authProvider: IAuthProvider
+    ) {}
     
     async login({ email, password }: LoginDTO) {
         if(!email || !password) {
@@ -26,7 +24,7 @@ export class Login {
             throw new Error("Invalid password");
         }
 
-        const token = new JWTProvider().sign({ id: user.id });
+        const token = this.authProvider.sign({ id: user.id });
 
         return { token };
     }
