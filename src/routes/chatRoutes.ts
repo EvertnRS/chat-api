@@ -18,7 +18,7 @@ const chatController = new ChatController(chatRepository, userRepository, storag
 
 router.use(authenticateToken(jwtProvider));
 router.post('/chat/create', upload.single("photo"),  (req, res) => {chatController.createChat(req, res)});
-router.put('/chat/:id', (req, res) => {chatController.updateChat(req, res)});
+router.put('/chat/:id', upload.single("photo"), (req, res) => {chatController.updateChat(req, res)});
 router.delete('/chat/:id',  (req, res) => {chatController.deleteChat(req, res)});
 router.get('/chat',  (req, res) => {chatController.listChats(req, res)});
 

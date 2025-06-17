@@ -36,13 +36,14 @@ export class S3StorageProvider implements IStorageProvider {
     return `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/${key}`;
   }
 
-  async updateFile({ fileBuffer, fileName, mimeType, fileUrl }: {
+  async updateFile({ fileBuffer, fileName, mimeType, oldFileUrl }: {
     fileBuffer: Buffer;
     fileName: string;
     mimeType: string;
-    fileUrl: string;
+    oldFileUrl: string;
   }): Promise<string> {
-    const key = fileUrl.split('/').slice(-1)[0];
+    const bucketUrlPrefix = `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/`;
+    const key = oldFileUrl.replace(bucketUrlPrefix, '');
     const extension = path.extname(fileName);
     const newKey = `${path.dirname(key)}/${uuidv4()}${extension}`;
 
@@ -53,13 +54,14 @@ export class S3StorageProvider implements IStorageProvider {
       ContentType: mimeType
     }));
 
-    await this.deleteFile(fileUrl);
+    await this.deleteFile(oldFileUrl);
 
     return `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/${newKey}`;
   }
 
   async deleteFile(fileUrl: string): Promise<void> {
-    const key = fileUrl.split('/').slice(-1)[0];
+    const bucketUrlPrefix = `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/`;
+    const key = fileUrl.replace(bucketUrlPrefix, '');
 
     await this.client.send(new DeleteObjectCommand({
       Bucket: process.env.S3_BUCKET_NAME!,
@@ -67,7 +69,7 @@ export class S3StorageProvider implements IStorageProvider {
     }));
   }
 
-  async getFile({ fileUrl }: { fileUrl: string }): Promise<string> {
+  async getFile(fileUrl: string): Promise<string> {
     const key = fileUrl.split('.com/')[1];
 
     const command = new GetObjectCommand({

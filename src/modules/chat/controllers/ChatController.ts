@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { IChatRepository } from '../domain/repositories/IChatRepository';
-import { CreateChat } from '../cases/createChat';
+import { CreateChat, UpdateChat } from '../cases';
 import { IUserRepository } from '../../user/domain/repositories/IUserRepository';
 import { IStorageProvider } from '../../../infra/providers/bucket/IStorageProvider';
 
@@ -23,7 +23,6 @@ export class ChatController {
         let participants: string[];
 
         try {
-            // Se vier como JSON string (exemplo: '["id1", "id2"]')
             participants = JSON.parse(req.body.participants);
         } catch {
             return res.status(400).json({ error: "Invalid participants format" });
@@ -40,7 +39,28 @@ export class ChatController {
     }
 
     async updateChat(req: Request, res: Response){
+        const { id } = req.params;
+        console.log(id);
+        console.log(req.body);
+        const { name, description } = req.body;
+        const photo = req.file;
+        
+        let participants: string[];
 
+        try {
+            participants = JSON.parse(req.body.participants);
+        } catch {
+            return res.status(400).json({ error: "Invalid participants format" });
+        }
+
+        const updateChat = new UpdateChat(this.chatRepository, this.userRepository, this.storageProvider);
+
+        try {
+            const chat = await updateChat.update({ name, description, photo, participants }, id);
+            return res.status(200).json(chat);
+        } catch (error: any) {
+            return res.status(400).json({ error: error.message });
+        }
     }
 
     async deleteChat(req: Request, res: Response){
