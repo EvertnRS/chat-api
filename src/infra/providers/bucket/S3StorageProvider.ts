@@ -1,5 +1,5 @@
-// src/infra/providers/s3/S3StorageProvider.ts
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { IStorageProvider } from './IStorageProvider';
@@ -34,5 +34,49 @@ export class S3StorageProvider implements IStorageProvider {
     }));
 
     return `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/${key}`;
+  }
+
+  async updateFile({ fileBuffer, fileName, mimeType, fileUrl }: {
+    fileBuffer: Buffer;
+    fileName: string;
+    mimeType: string;
+    fileUrl: string;
+  }): Promise<string> {
+    const key = fileUrl.split('/').slice(-1)[0];
+    const extension = path.extname(fileName);
+    const newKey = `${path.dirname(key)}/${uuidv4()}${extension}`;
+
+    await this.client.send(new PutObjectCommand({
+      Bucket: process.env.S3_BUCKET_NAME!,
+      Key: newKey,
+      Body: fileBuffer,
+      ContentType: mimeType
+    }));
+
+    await this.deleteFile(fileUrl);
+
+    return `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/${newKey}`;
+  }
+
+  async deleteFile(fileUrl: string): Promise<void> {
+    const key = fileUrl.split('/').slice(-1)[0];
+
+    await this.client.send(new DeleteObjectCommand({
+      Bucket: process.env.S3_BUCKET_NAME!,
+      Key: key
+    }));
+  }
+
+  async getFile({ fileUrl }: { fileUrl: string }): Promise<string> {
+    const key = fileUrl.split('.com/')[1];
+
+    const command = new GetObjectCommand({
+      Bucket: process.env.S3_BUCKET_NAME!,
+      Key: key
+    });
+
+    const url = await getSignedUrl(this.client, command, {});
+
+    return url;
   }
 }
