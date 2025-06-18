@@ -3,7 +3,7 @@ import { authenticateToken } from "../infra/middlewares/authMiddleware";
 import { UserController } from '../modules/user/controllers/UserController';
 import { AuthController } from '../modules/user/controllers/AuthController';
 import { UserRepository } from '../modules/user/domain/repositories/UserRepository';
-import { JWTProvider } from '../infra/providers/JWTProvider';
+import { JWTProvider } from '../infra/providers/auth/JWTProvider';
 
 const router = Router();
 const userRepository = new UserRepository;

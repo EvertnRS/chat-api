@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { IAuthProvider } from '../providers/IAuthProvider';
+import { IAuthProvider } from '../providers/auth/IAuthProvider';
 
 export function authenticateToken(authProvider: IAuthProvider) {
     return (req: Request, res: Response, next: NextFunction): void => {
@@ -12,8 +12,10 @@ export function authenticateToken(authProvider: IAuthProvider) {
 
         const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
 
-        const result = authProvider.verify(token);
-        if (!result) {
+        const payload = authProvider.verify(token) as { userId: string };
+        req.user = { id: payload.userId };
+
+        if (!payload) {
             res.status(403).json({ error: 'Invalid token' });
             return;
         }

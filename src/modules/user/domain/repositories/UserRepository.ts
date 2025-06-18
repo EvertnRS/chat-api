@@ -1,14 +1,15 @@
 import { IUserRepository } from '../repositories/IUserRepository';
 import { User } from '../entities/User';
-import { UpdateUserRequest } from '../../../../@types/UpdateUserRequest';
-import type { CreateUserRequest } from '../../../../@types/CreateUserRequest';
-import { prisma } from '../../../../infra/database/prismaClient';
+import { UpdateUserRequest } from '../../../../@types/user/UpdateUserRequest';
+import type { CreateUserRequest } from '../../../../@types/user/CreateUserRequest';
+import type { DeleteUserRequest } from '../../../../@types/user/DeleteUserRequest';
+import { postgres } from '../../../../infra/database/prismaClient';
 
 export class UserRepository implements IUserRepository {
   
   async save(createUser: CreateUserRequest): Promise<User> {
     const { name, email, hashedPassword } = createUser;
-    const data = await prisma.user.create({
+    const data = await postgres.user.create({
       data: {
         name,
         email,
@@ -21,7 +22,7 @@ export class UserRepository implements IUserRepository {
   
   async update(updateUser: UpdateUserRequest, id: string): Promise<User> {
     const { name, email, password } = updateUser;
-    const data = await prisma.user.update({
+    const data = await postgres.user.update({
       where: { id },
       data: {
         name,
@@ -33,13 +34,14 @@ export class UserRepository implements IUserRepository {
     return data;
   }
 
-async delete (id: string): Promise<void> {
-    await prisma.user.delete({
+async delete (deleteUser : DeleteUserRequest): Promise<void> {
+    const { id } = deleteUser;
+    await postgres.user.delete({
       where: { id }});
     }
 
   async findByEmail(email: string): Promise<User | null> {
-    const data = await prisma.user.findUnique({
+    const data = await postgres.user.findUnique({
       where: { email }
     });
 
@@ -51,7 +53,7 @@ async delete (id: string): Promise<void> {
   }
 
   async findById(id: string): Promise<User | null> {
-    const data = await prisma.user.findUnique({
+    const data = await postgres.user.findUnique({
       where: { id }
     });
 
@@ -62,5 +64,15 @@ async delete (id: string): Promise<void> {
     return data;
   }
 
+  async findManyById(ids: string[]): Promise<User[]> {    
+    const data = await postgres.user.findMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    });
 
+    return data;
+  }
 }

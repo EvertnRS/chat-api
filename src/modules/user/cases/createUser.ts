@@ -1,6 +1,5 @@
 import { IUserRepository } from '../domain/repositories/IUserRepository';
-import type { CreateUserRequest } from '../../../@types/CreateUserRequest';
-import { User } from '../domain/entities/User';
+import type { CreateUserRequest } from '../../../@types/user/CreateUserRequest';
 import bcrypt from 'bcrypt';
 
 interface CreateUserDTO {
