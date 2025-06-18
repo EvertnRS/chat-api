@@ -1,11 +1,12 @@
 import { CreateChatRequest } from '../../../../@types/chat/CreateChatRequest';
 import { UpdateChatRequest } from '../../../../@types/chat/UpdateChatRequest';
 import { DeleteChatRequest } from '../../../../@types/chat/DeleteChatRequest';
+import { ListChatsRequest } from "../../../../@types/chat/ListChatsRequest";
 import { Chat } from '../entities/Chat';
 import { IChatRepository } from './IChatRepository';
 import { mongo } from '../../../../infra/database/prismaClient';
 
-export class ChatRepository implements IChatRepository {
+export class ChatRepository implements IChatRepository {  
 	async save(createChat: CreateChatRequest): Promise<Chat> {
         const { name, description, fileURL, participants, creator } = createChat;
         const data = await mongo.chat.create({
@@ -42,15 +43,42 @@ export class ChatRepository implements IChatRepository {
         where: { id }});
       }
 
-    async findById(id: string): Promise<Chat | null> {
-        const data = await mongo.chat.findUnique({
-        where: { id }
-        });
+  async findById(id: string): Promise<Chat | null> {
+      const data = await mongo.chat.findUnique({
+      where: { id }
+      });
 
-        if (!data) {
-            return null;
-        }
+      if (!data) {
+          return null;
+      }
 
-        return data;
+      return data;
     }
+
+    async findByName(listChats: ListChatsRequest): Promise<Chat[] | null> {
+      const { search, userId } = listChats;
+
+      const query: any = {
+        participants: {
+          has: userId
+        }
+      };
+
+      if (search) {
+        query.name = {
+          contains: search,
+          mode: 'insensitive'
+        };
+      }
+
+      const data = await mongo.chat.findMany({
+        where: query,
+        orderBy: {
+          lastMessageAt: 'desc'
+        }
+      });
+
+      return data.length > 0 ? data : null;
+    }
+
 }

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { IChatRepository } from '../domain/repositories/IChatRepository';
-import { CreateChat, UpdateChat, DeleteChat } from '../cases';
+import { CreateChat, UpdateChat, DeleteChat, ListChats } from '../cases';
 import { IUserRepository } from '../../user/domain/repositories/IUserRepository';
 import { IStorageProvider } from '../../../infra/providers/storage/IStorageProvider';
 
@@ -80,7 +80,7 @@ export class ChatController {
         }
         
         const deleteChat = new DeleteChat(this.chatRepository, this.userRepository, this.storageProvider);
-        
+
         try{
             await deleteChat.delete(id, userId);
             return res.status(204).json();
@@ -92,6 +92,21 @@ export class ChatController {
     }
 
     async listChats(req: Request, res: Response){
+        const searchTerm = req.query.search?.toString() || '';
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(400).json({ error: "User id is required" });
+        }
+
+        const listChats = new ListChats(this.chatRepository);
+
+        try{
+            const chats = await listChats.list(searchTerm, userId);
+            return res.status(200).json(chats);
+        } catch (error: any) {
+            return res.status(400).json({ error: error.message });
+        }
 
     }
 }

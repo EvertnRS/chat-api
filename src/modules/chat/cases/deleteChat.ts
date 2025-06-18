@@ -1,7 +1,6 @@
 import { IStorageProvider } from "../../../infra/providers/storage/IStorageProvider";
 import { IUserRepository } from "../../user/domain/repositories/IUserRepository";
 import { IChatRepository } from "../domain/repositories/IChatRepository";
-import { DeleteChatRequest } from "../../../@types/chat/DeleteChatRequest";
 
 export class DeleteChat{
     constructor(

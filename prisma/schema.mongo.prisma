@@ -9,13 +9,14 @@ datasource mongodb {
 }
 
 model Chat {
-  id           String   @id @default(uuid()) @map("_id")
-  name         String
-  description  String?
-  photo        String?
-  participants String[]
-  creator      String
-  createdAt    DateTime @default(now())
+  id            String   @id @default(uuid()) @map("_id")
+  name          String
+  description   String?
+  photo         String?
+  participants  String[]
+  creator       String
+  lastMessageAt DateTime @default(now())
+  createdAt     DateTime @default(now())
 }
 
 model Message {
