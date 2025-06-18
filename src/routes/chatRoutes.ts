@@ -4,7 +4,7 @@ import { ChatController } from '../modules/chat/controllers/ChatController';
 import { ChatRepository } from '../modules/chat/domain/repositories/ChatRepository';
 import { UserRepository } from '../modules/user/domain/repositories/UserRepository';
 import { JWTProvider } from '../infra/providers/auth/JWTProvider';
-import { S3StorageProvider } from '../infra/providers/bucket/S3StorageProvider';
+import { S3StorageProvider } from '../infra/providers/storage/S3StorageProvider';
 import multer from 'multer';
 
 const router = Router();

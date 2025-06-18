@@ -24,8 +24,9 @@ export class UserController {
         const { id } = req.params;
         const { name, email, password } = req.body;
 
+        const updateUser = new UpdateUser(this.userRepository);
+        
         try {
-            const updateUser = new UpdateUser(this.userRepository);
             const result = await updateUser.update({ name, email, password }, id);
             return res.status(200).json(result);
         } catch (error: any) {
@@ -37,8 +38,9 @@ export class UserController {
         const { id } = req.params;
         const { password } = req.body;
 
+        const deleteUser = new DeleteUser(this.userRepository);
+
         try {
-            const deleteUser = new DeleteUser(this.userRepository);
             await deleteUser.delete(password, id);
             return res.status(204).json();
             

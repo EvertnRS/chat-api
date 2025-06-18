@@ -929,6 +929,7 @@ export namespace Prisma {
     name: string | null
     description: string | null
     photo: string | null
+    creator: string | null
     createdAt: Date | null
   }
 
@@ -937,6 +938,7 @@ export namespace Prisma {
     name: string | null
     description: string | null
     photo: string | null
+    creator: string | null
     createdAt: Date | null
   }
 
@@ -946,6 +948,7 @@ export namespace Prisma {
     description: number
     photo: number
     participants: number
+    creator: number
     createdAt: number
     _all: number
   }
@@ -956,6 +959,7 @@ export namespace Prisma {
     name?: true
     description?: true
     photo?: true
+    creator?: true
     createdAt?: true
   }
 
@@ -964,6 +968,7 @@ export namespace Prisma {
     name?: true
     description?: true
     photo?: true
+    creator?: true
     createdAt?: true
   }
 
@@ -973,6 +978,7 @@ export namespace Prisma {
     description?: true
     photo?: true
     participants?: true
+    creator?: true
     createdAt?: true
     _all?: true
   }
@@ -1055,6 +1061,7 @@ export namespace Prisma {
     description: string | null
     photo: string | null
     participants: string[]
+    creator: string
     createdAt: Date
     _count: ChatCountAggregateOutputType | null
     _min: ChatMinAggregateOutputType | null
@@ -1081,6 +1088,7 @@ export namespace Prisma {
     description?: boolean
     photo?: boolean
     participants?: boolean
+    creator?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["chat"]>
 
@@ -1092,10 +1100,11 @@ export namespace Prisma {
     description?: boolean
     photo?: boolean
     participants?: boolean
+    creator?: boolean
     createdAt?: boolean
   }
 
-  export type ChatOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "photo" | "participants" | "createdAt", ExtArgs["result"]["chat"]>
+  export type ChatOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "photo" | "participants" | "creator" | "createdAt", ExtArgs["result"]["chat"]>
 
   export type $ChatPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Chat"
@@ -1106,6 +1115,7 @@ export namespace Prisma {
       description: string | null
       photo: string | null
       participants: string[]
+      creator: string
       createdAt: Date
     }, ExtArgs["result"]["chat"]>
     composites: {}
@@ -1504,6 +1514,7 @@ export namespace Prisma {
     readonly description: FieldRef<"Chat", 'String'>
     readonly photo: FieldRef<"Chat", 'String'>
     readonly participants: FieldRef<"Chat", 'String[]'>
+    readonly creator: FieldRef<"Chat", 'String'>
     readonly createdAt: FieldRef<"Chat", 'DateTime'>
   }
     
@@ -2828,6 +2839,7 @@ export namespace Prisma {
     description: 'description',
     photo: 'photo',
     participants: 'participants',
+    creator: 'creator',
     createdAt: 'createdAt'
   };
 
@@ -2923,6 +2935,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Chat"> | string | null
     photo?: StringNullableFilter<"Chat"> | string | null
     participants?: StringNullableListFilter<"Chat">
+    creator?: StringFilter<"Chat"> | string
     createdAt?: DateTimeFilter<"Chat"> | Date | string
   }
 
@@ -2932,6 +2945,7 @@ export namespace Prisma {
     description?: SortOrder
     photo?: SortOrder
     participants?: SortOrder
+    creator?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -2944,6 +2958,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Chat"> | string | null
     photo?: StringNullableFilter<"Chat"> | string | null
     participants?: StringNullableListFilter<"Chat">
+    creator?: StringFilter<"Chat"> | string
     createdAt?: DateTimeFilter<"Chat"> | Date | string
   }, "id">
 
@@ -2953,6 +2968,7 @@ export namespace Prisma {
     description?: SortOrder
     photo?: SortOrder
     participants?: SortOrder
+    creator?: SortOrder
     createdAt?: SortOrder
     _count?: ChatCountOrderByAggregateInput
     _max?: ChatMaxOrderByAggregateInput
@@ -2968,6 +2984,7 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"Chat"> | string | null
     photo?: StringNullableWithAggregatesFilter<"Chat"> | string | null
     participants?: StringNullableListFilter<"Chat">
+    creator?: StringWithAggregatesFilter<"Chat"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Chat"> | Date | string
   }
 
@@ -3044,6 +3061,7 @@ export namespace Prisma {
     description?: string | null
     photo?: string | null
     participants?: ChatCreateparticipantsInput | string[]
+    creator: string
     createdAt?: Date | string
   }
 
@@ -3053,6 +3071,7 @@ export namespace Prisma {
     description?: string | null
     photo?: string | null
     participants?: ChatCreateparticipantsInput | string[]
+    creator: string
     createdAt?: Date | string
   }
 
@@ -3061,6 +3080,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     photo?: NullableStringFieldUpdateOperationsInput | string | null
     participants?: ChatUpdateparticipantsInput | string[]
+    creator?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3069,6 +3089,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     photo?: NullableStringFieldUpdateOperationsInput | string | null
     participants?: ChatUpdateparticipantsInput | string[]
+    creator?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3078,6 +3099,7 @@ export namespace Prisma {
     description?: string | null
     photo?: string | null
     participants?: ChatCreateparticipantsInput | string[]
+    creator: string
     createdAt?: Date | string
   }
 
@@ -3086,6 +3108,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     photo?: NullableStringFieldUpdateOperationsInput | string | null
     participants?: ChatUpdateparticipantsInput | string[]
+    creator?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3094,6 +3117,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     photo?: NullableStringFieldUpdateOperationsInput | string | null
     participants?: ChatUpdateparticipantsInput | string[]
+    creator?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3226,6 +3250,7 @@ export namespace Prisma {
     description?: SortOrder
     photo?: SortOrder
     participants?: SortOrder
+    creator?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -3234,6 +3259,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     photo?: SortOrder
+    creator?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -3242,6 +3268,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     photo?: SortOrder
+    creator?: SortOrder
     createdAt?: SortOrder
   }
 

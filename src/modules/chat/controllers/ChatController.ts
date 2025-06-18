@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { IChatRepository } from '../domain/repositories/IChatRepository';
-import { CreateChat, UpdateChat } from '../cases';
+import { CreateChat, UpdateChat, DeleteChat } from '../cases';
 import { IUserRepository } from '../../user/domain/repositories/IUserRepository';
-import { IStorageProvider } from '../../../infra/providers/bucket/IStorageProvider';
+import { IStorageProvider } from '../../../infra/providers/storage/IStorageProvider';
 
 interface MulterRequest extends Request {
     file: Express.Multer.File;
@@ -19,7 +19,12 @@ export class ChatController {
     async createChat(req: Request, res: Response){
         const { name, description } = req.body;
         const photo = req.file;
+        const creator = req.user?.id;
         
+        if (!creator) {
+            return res.status(400).json({ error: "Creator id is required" });
+        }
+
         let participants: string[];
 
         try {
@@ -31,7 +36,7 @@ export class ChatController {
         const createChat = new CreateChat(this.chatRepository, this.userRepository, this.storageProvider);
 
         try {
-            const chat = await createChat.create({ name, description, photo, participants });
+            const chat = await createChat.create({ name, description, photo, participants, creator });
             return res.status(201).json(chat);
         } catch (error: any) {
             return res.status(400).json({ error: error.message });
@@ -40,10 +45,13 @@ export class ChatController {
 
     async updateChat(req: Request, res: Response){
         const { id } = req.params;
-        console.log(id);
-        console.log(req.body);
         const { name, description } = req.body;
         const photo = req.file;
+        const userId = req.user?.id;
+        
+        if (!userId) {
+            return res.status(400).json({ error: "user id is required" });
+        }
         
         let participants: string[];
 
@@ -56,7 +64,7 @@ export class ChatController {
         const updateChat = new UpdateChat(this.chatRepository, this.userRepository, this.storageProvider);
 
         try {
-            const chat = await updateChat.update({ name, description, photo, participants }, id);
+            const chat = await updateChat.update({ name, description, photo, participants }, id, userId);
             return res.status(200).json(chat);
         } catch (error: any) {
             return res.status(400).json({ error: error.message });
@@ -64,6 +72,22 @@ export class ChatController {
     }
 
     async deleteChat(req: Request, res: Response){
+        const { id } = req.params;
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(400).json({ error: "User id is required" });
+        }
+        
+        const deleteChat = new DeleteChat(this.chatRepository, this.userRepository, this.storageProvider);
+        
+        try{
+            await deleteChat.delete(id, userId);
+            return res.status(204).json();
+        }
+        catch(error: any) {
+            return res.status(400).json({ error: error.message });
+        }
 
     }
 

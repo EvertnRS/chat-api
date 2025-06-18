@@ -1,6 +1,5 @@
-import { CreateChatRequest } from "../../../@types/chat/CreateChatRequest";
 import { UpdateChatRequest } from "../../../@types/chat/UpdateChatRequest";
-import { IStorageProvider } from "../../../infra/providers/bucket/IStorageProvider";
+import { IStorageProvider } from "../../../infra/providers/storage/IStorageProvider";
 import { IUserRepository } from "../../user/domain/repositories/IUserRepository";
 import { Chat } from "../domain/entities/Chat";
 import { IChatRepository } from "../domain/repositories/IChatRepository";
@@ -13,14 +12,19 @@ export class UpdateChat {
     ) 
     {}
 
-    async update({name, description, photo, participants}: UpdateChatRequest, id : string): Promise<Chat> {
+    async update({name, description, photo, participants}: UpdateChatRequest, id : string, userId : string): Promise<Chat> {
         const chat = await this.chatRepository.findById(id);
-        let newParticipants: string[] = [];
         
         if (!chat) {
             throw new Error("Chat not found");
         }
 
+        if (chat.creator !== userId) {
+            throw new Error("Only the creator can update the chat");
+        }
+        
+        let newParticipants: string[] = [];
+        
         if (participants) {
             const participantUsers = await this.userRepository.findManyById(participants);
             if (participantUsers.length !== participants.length) {

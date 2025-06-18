@@ -14,6 +14,7 @@ model Chat {
   description  String?
   photo        String?
   participants String[]
+  creator      String
   createdAt    DateTime @default(now())
 }
 

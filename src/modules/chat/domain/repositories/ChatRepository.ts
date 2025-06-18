@@ -1,18 +1,20 @@
 import { CreateChatRequest } from '../../../../@types/chat/CreateChatRequest';
 import { UpdateChatRequest } from '../../../../@types/chat/UpdateChatRequest';
+import { DeleteChatRequest } from '../../../../@types/chat/DeleteChatRequest';
 import { Chat } from '../entities/Chat';
 import { IChatRepository } from './IChatRepository';
 import { mongo } from '../../../../infra/database/prismaClient';
 
 export class ChatRepository implements IChatRepository {
 	async save(createChat: CreateChatRequest): Promise<Chat> {
-        const { name, description, fileURL, participants } = createChat;
+        const { name, description, fileURL, participants, creator } = createChat;
         const data = await mongo.chat.create({
             data: {
                 name,
                 description,
                 photo: fileURL,
-                participants
+                participants,
+                creator
             }
         });
 
@@ -33,6 +35,12 @@ export class ChatRepository implements IChatRepository {
   
     return data;
   }
+
+  async delete (deleteChat : DeleteChatRequest): Promise<void> {
+      const { id } = deleteChat;
+      await mongo.chat.delete({
+        where: { id }});
+      }
 
     async findById(id: string): Promise<Chat | null> {
         const data = await mongo.chat.findUnique({

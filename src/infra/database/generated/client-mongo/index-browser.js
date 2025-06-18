@@ -119,6 +119,7 @@ exports.Prisma.ChatScalarFieldEnum = {
   description: 'description',
   photo: 'photo',
   participants: 'participants',
+  creator: 'creator',
   createdAt: 'createdAt'
 };
 

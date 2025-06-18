@@ -19,7 +19,7 @@ export class DeleteUser {
                 throw new Error("Invalid password");
             }
 
-            return await this.userRepository.delete(id);
+            return await this.userRepository.delete({id});
             
         }
 }

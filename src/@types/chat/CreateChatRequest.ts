@@ -4,4 +4,5 @@ export type CreateChatRequest = {
     photo?: Express.Multer.File;
     fileURL?: string;
     participants: string[];
+    creator: string;
 }

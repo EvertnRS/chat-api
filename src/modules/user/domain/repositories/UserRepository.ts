@@ -2,6 +2,7 @@ import { IUserRepository } from '../repositories/IUserRepository';
 import { User } from '../entities/User';
 import { UpdateUserRequest } from '../../../../@types/user/UpdateUserRequest';
 import type { CreateUserRequest } from '../../../../@types/user/CreateUserRequest';
+import type { DeleteUserRequest } from '../../../../@types/user/DeleteUserRequest';
 import { postgres } from '../../../../infra/database/prismaClient';
 
 export class UserRepository implements IUserRepository {
@@ -33,7 +34,8 @@ export class UserRepository implements IUserRepository {
     return data;
   }
 
-async delete (id: string): Promise<void> {
+async delete (deleteUser : DeleteUserRequest): Promise<void> {
+    const { id } = deleteUser;
     await postgres.user.delete({
       where: { id }});
     }
