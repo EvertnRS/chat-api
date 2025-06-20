@@ -21,5 +21,6 @@ router.post('/chat/create', upload.single("photo"),  (req, res) => {chatControll
 router.put('/chat/:id', upload.single("photo"), (req, res) => {chatController.updateChat(req, res)});
 router.delete('/chat/:id',  (req, res) => {chatController.deleteChat(req, res)});
 router.get('/chat',  (req, res) => {chatController.listChats(req, res)});
+router.post('/chat/exit/:id', (req, res) => {chatController.exitChat(req, res)});
 
 export default router;

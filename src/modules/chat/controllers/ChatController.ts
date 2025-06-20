@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { IChatRepository } from '../domain/repositories/IChatRepository';
-import { CreateChat, UpdateChat, DeleteChat, ListChats } from '../cases';
+import { CreateChat, UpdateChat, DeleteChat, ListChats, ExitChat } from '../cases';
 import { IUserRepository } from '../../user/domain/repositories/IUserRepository';
 import { IStorageProvider } from '../../../infra/providers/storage/IStorageProvider';
 
@@ -55,10 +55,14 @@ export class ChatController {
         
         let participants: string[];
 
-        try {
-            participants = JSON.parse(req.body.participants);
-        } catch {
-            return res.status(400).json({ error: "Invalid participants format" });
+        if(req.body.participants !== undefined && req.body.participants !== '') {
+            try {
+                participants = JSON.parse(req.body.participants);
+            } catch {
+                return res.status(400).json({ error: "Invalid participants format" });
+            }
+        } else {
+            participants = [];
         }
 
         const updateChat = new UpdateChat(this.chatRepository, this.userRepository, this.storageProvider);
@@ -108,6 +112,25 @@ export class ChatController {
             return res.status(400).json({ error: error.message });
         }
 
+    }
+
+    async exitChat(req: Request, res: Response) {
+        const { id } = req.params;
+        console.log(req.user)
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(400).json({ error: "User id is required" });
+        }
+
+        const exitChat = new ExitChat(this.chatRepository);
+
+        try {
+            await exitChat.exit(id, userId);
+            return res.status(200).json({ message: "Successfully exited the chat" });
+        } catch (error: any) {
+            return res.status(400).json({ error: error.message });
+        }
     }
 }
 

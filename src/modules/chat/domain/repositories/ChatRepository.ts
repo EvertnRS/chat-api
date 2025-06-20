@@ -81,4 +81,26 @@ export class ChatRepository implements IChatRepository {
       return data.length > 0 ? data : null;
     }
 
+    async exitChat(id: string, userId: string): Promise<void> {
+        const participants = await mongo.chat.findUnique({
+            where: { id },
+            select: { participants: true }
+        });
+
+        if (!participants || !participants.participants.includes(userId)) {
+            throw new Error('User is not a participant of this chat');
+        }
+
+        const updatedParticipants = participants.participants.filter(participant => participant !== userId);
+
+        await mongo.chat.update({
+            where: { id },
+            data: {
+                participants: {
+                    set: updatedParticipants
+                }
+            }
+        });
+    }
+
 }
