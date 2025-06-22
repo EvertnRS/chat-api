@@ -4,4 +4,5 @@ export type CreateMessageRequest = {
     content: string;
     file?: Express.Multer.File;
     fileURL?: string;
+    sentAt: Date;
 }

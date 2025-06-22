@@ -1,7 +1,8 @@
-import { SendNewMessageRequest } from "../../../@types/websocket/SendNewMessageRequest";
-import { SendUpdatedMessageRequest } from "../../../@types/websocket/sendUpdatedMessageRequest";
+import { CreateMessageRequest } from "../../../@types/message/CreateMessageRequest";
+import { UpdateMessageRequest } from "../../../@types/message/UpdateMessageRequest";
 
 export interface IWebSocketProvider {
-    sendNewMessage(sendNewMessageRequest : SendNewMessageRequest): Promise<void>;
-    sendUpdateMessage(sendUpdatedMessageRequest : SendUpdatedMessageRequest): Promise<void>;
+    sendNewMessage(sendNewMessageRequest : CreateMessageRequest): Promise<void>;
+    sendUpdateMessage(sendUpdatedMessageRequest : UpdateMessageRequest): Promise<void>;
+    isUserConnected(userId: string): Promise<boolean>;
 }

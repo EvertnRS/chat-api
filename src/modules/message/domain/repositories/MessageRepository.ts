@@ -1,18 +1,20 @@
 import { CreateMessageRequest } from "../../../../@types/message/CreateMessageRequest";
 import { UpdateMessageRequest } from '../../../../@types/message/UpdateMessageRequest';
+import { ListMessageRequest } from '../../../../@types/message/ListMessageRequest';
 import { Message } from "../../../message/domain/entities/Message";
 import { IMessageRepository } from "./IMessageRepository";
 import { mongo } from '../../../../infra/database/prismaClient';
 
 export class MessageRepository implements IMessageRepository {
     async save(createMessage: CreateMessageRequest): Promise<Message> {
-        const { sender, recipient, content, fileURL } = createMessage;
+        const { sender, recipient, content, fileURL, sentAt } = createMessage;
         const data = await mongo.message.create({
             data: {
                 sender,
                 recipient,
                 text: content,
-                file: fileURL
+                file: fileURL,
+                sentAt
             }
         });
 
@@ -37,8 +39,17 @@ export class MessageRepository implements IMessageRepository {
         return data;
     }
 
-    listMessagesByChatId(chatId: string): Promise<Message[]> {
-        throw new Error("Method not implemented.");
+    listMessagesByChatId(listMessagesRequest: ListMessageRequest): Promise<Message[]> {
+        const { chatId, page = 1, limit = 10 } = listMessagesRequest;
+
+        return mongo.message.findMany({
+            where: { 
+                recipient: chatId 
+                },
+            orderBy: { sentAt: 'desc' },
+            skip: (page - 1) * limit,
+            take: limit
+        });
     }
 
     async findById(id: string): Promise<Message | null> {

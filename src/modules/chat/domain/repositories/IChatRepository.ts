@@ -12,4 +12,6 @@ export interface IChatRepository {
     findById(id: string): Promise<Chat | null>;
     exitChat(id: string, userId: string): Promise<void>;
     updateLastMessageTime(chatId: string, newDate : Date): Promise<void>;
+    listParticipantsByChatId(chatId: string): Promise<string[]>;
+    isUserInChat(chatId: string, userId: string): Promise<boolean>;
 }
