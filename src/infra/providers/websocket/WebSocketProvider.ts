@@ -1,7 +1,7 @@
 import { io } from '../../../../server';
 import { Server } from 'socket.io';
 import { SendNewMessageRequest } from "../../../@types/websocket/SendNewMessageRequest";
-import { SendUpdatedMessageRequest } from "../../../@types/websocket/sendUpdatedMessageRequest";
+import { SendUpdatedMessageRequest } from "../../../@types/websocket/SendUpdatedMessageRequest";
 
 export class WebSocketProvider {
 
