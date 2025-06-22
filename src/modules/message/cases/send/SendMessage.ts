@@ -1,6 +1,6 @@
-import { IWebSocketProvider } from '../../../infra/providers/websocket/IWebSocketProvider';
-import { IStorageProvider } from '../../../infra/providers/storage/IStorageProvider';
-import { IChatRepository } from '../../chat/domain/repositories/IChatRepository';
+import { IWebSocketProvider } from '../../../../infra/providers/websocket/IWebSocketProvider';
+import { IStorageProvider } from '../../../../infra/providers/storage/IStorageProvider';
+import { IChatRepository } from '../../../chat/domain/repositories/IChatRepository';
 
 export class SendMessage {
     constructor(
@@ -15,8 +15,9 @@ export class SendMessage {
             file = await this.storageProvider.getFile(fileURL);
         }
         
-        this.webSocketProvider.sendNewMessage(recipient, content, file);
+        await this.chatRepository.updateLastMessageTime(recipient, new Date());
 
-        this.chatRepository.updateLastMessageTime(recipient, new Date());
+        this.webSocketProvider.sendNewMessage({ recipient, content, fileURL:file });
+
     }
 }

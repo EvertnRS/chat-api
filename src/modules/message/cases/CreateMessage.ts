@@ -5,7 +5,7 @@ import { IStorageProvider } from '../../../infra/providers/storage/IStorageProvi
 import { IWebSocketProvider } from '../../../infra/providers/websocket/IWebSocketProvider';
 import { CreateMessageRequest } from '../../../@types/message/CreateMessageRequest';
 import { Message } from '../domain/entities/Message';
-import { SendMessage } from './SendMessage';
+import { SendMessage } from './send/SendMessage';
 
 export class CreateMessage {
     constructor(
@@ -30,8 +30,6 @@ export class CreateMessage {
         }
 
         let folder = '';
-
-        console.log(file?.mimetype)
 
         if(file?.mimetype.startsWith('image/')) {
             folder = 'message/photos';

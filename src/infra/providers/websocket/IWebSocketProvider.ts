@@ -1,3 +1,7 @@
+import { SendNewMessageRequest } from "../../../@types/websocket/SendNewMessageRequest";
+import { SendUpdatedMessageRequest } from "../../../@types/websocket/sendUpdatedMessageRequest";
+
 export interface IWebSocketProvider {
-    sendNewMessage(recipient: string, content: string, fileURL?: string): Promise<void>;
+    sendNewMessage(sendNewMessageRequest : SendNewMessageRequest): Promise<void>;
+    sendUpdateMessage(sendUpdatedMessageRequest : SendUpdatedMessageRequest): Promise<void>;
 }

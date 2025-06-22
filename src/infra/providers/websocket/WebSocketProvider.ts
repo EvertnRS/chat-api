@@ -1,10 +1,18 @@
 import { io } from '../../../../server';
 import { Server } from 'socket.io';
+import { SendNewMessageRequest } from "../../../@types/websocket/SendNewMessageRequest";
+import { SendUpdatedMessageRequest } from "../../../@types/websocket/sendUpdatedMessageRequest";
 
 export class WebSocketProvider {
 
-    async sendNewMessage(chatId: string, message: string, fileURL:string | null = null) {
+    async sendNewMessage(sendNewMessageRequest : SendNewMessageRequest) {
+        const { recipient:chatId, content:message, fileURL} = sendNewMessageRequest
         io.to(chatId).emit('newMessage', ({message, fileURL}));
+    }
+
+    async sendUpdateMessage(sendUpdatedMessageRequest : SendUpdatedMessageRequest) {
+        const { recipient:chatId, messageId, newContent } = sendUpdatedMessageRequest
+        io.to(chatId).emit('updateMessage', { messageId, newContent });
     }
 
     async setupSocket(io: Server) {
@@ -17,8 +25,8 @@ export class WebSocketProvider {
             })
 
             socket.on('sendMessage', (chatId: string, message: string, fileURL:string | null = null) => {
-                console.log(`Message received in room ${chatId}`);
-                console.log(`Message 2 ${message}`);
+                console.log(`Message received in room: ${chatId}`);
+                console.log(`Message: ${message}`);
                 io.to(chatId).emit('newMessage', ({message, fileURL}));
             });
 
