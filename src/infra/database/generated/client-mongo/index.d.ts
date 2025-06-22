@@ -1890,9 +1890,7 @@ export namespace Prisma {
     sender: string | null
     recipient: string | null
     text: string | null
-    image: string | null
-    video: string | null
-    audio: string | null
+    file: string | null
     sentAt: Date | null
   }
 
@@ -1901,9 +1899,7 @@ export namespace Prisma {
     sender: string | null
     recipient: string | null
     text: string | null
-    image: string | null
-    video: string | null
-    audio: string | null
+    file: string | null
     sentAt: Date | null
   }
 
@@ -1912,9 +1908,7 @@ export namespace Prisma {
     sender: number
     recipient: number
     text: number
-    image: number
-    video: number
-    audio: number
+    file: number
     sentAt: number
     _all: number
   }
@@ -1925,9 +1919,7 @@ export namespace Prisma {
     sender?: true
     recipient?: true
     text?: true
-    image?: true
-    video?: true
-    audio?: true
+    file?: true
     sentAt?: true
   }
 
@@ -1936,9 +1928,7 @@ export namespace Prisma {
     sender?: true
     recipient?: true
     text?: true
-    image?: true
-    video?: true
-    audio?: true
+    file?: true
     sentAt?: true
   }
 
@@ -1947,9 +1937,7 @@ export namespace Prisma {
     sender?: true
     recipient?: true
     text?: true
-    image?: true
-    video?: true
-    audio?: true
+    file?: true
     sentAt?: true
     _all?: true
   }
@@ -2031,9 +2019,7 @@ export namespace Prisma {
     sender: string
     recipient: string
     text: string | null
-    image: string | null
-    video: string | null
-    audio: string | null
+    file: string | null
     sentAt: Date
     _count: MessageCountAggregateOutputType | null
     _min: MessageMinAggregateOutputType | null
@@ -2059,9 +2045,7 @@ export namespace Prisma {
     sender?: boolean
     recipient?: boolean
     text?: boolean
-    image?: boolean
-    video?: boolean
-    audio?: boolean
+    file?: boolean
     sentAt?: boolean
   }, ExtArgs["result"]["message"]>
 
@@ -2072,13 +2056,11 @@ export namespace Prisma {
     sender?: boolean
     recipient?: boolean
     text?: boolean
-    image?: boolean
-    video?: boolean
-    audio?: boolean
+    file?: boolean
     sentAt?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sender" | "recipient" | "text" | "image" | "video" | "audio" | "sentAt", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sender" | "recipient" | "text" | "file" | "sentAt", ExtArgs["result"]["message"]>
 
   export type $MessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Message"
@@ -2088,9 +2070,7 @@ export namespace Prisma {
       sender: string
       recipient: string
       text: string | null
-      image: string | null
-      video: string | null
-      audio: string | null
+      file: string | null
       sentAt: Date
     }, ExtArgs["result"]["message"]>
     composites: {}
@@ -2488,9 +2468,7 @@ export namespace Prisma {
     readonly sender: FieldRef<"Message", 'String'>
     readonly recipient: FieldRef<"Message", 'String'>
     readonly text: FieldRef<"Message", 'String'>
-    readonly image: FieldRef<"Message", 'String'>
-    readonly video: FieldRef<"Message", 'String'>
-    readonly audio: FieldRef<"Message", 'String'>
+    readonly file: FieldRef<"Message", 'String'>
     readonly sentAt: FieldRef<"Message", 'DateTime'>
   }
     
@@ -2863,9 +2841,7 @@ export namespace Prisma {
     sender: 'sender',
     recipient: 'recipient',
     text: 'text',
-    image: 'image',
-    video: 'video',
-    audio: 'audio',
+    file: 'file',
     sentAt: 'sentAt'
   };
 
@@ -3013,9 +2989,7 @@ export namespace Prisma {
     sender?: StringFilter<"Message"> | string
     recipient?: StringFilter<"Message"> | string
     text?: StringNullableFilter<"Message"> | string | null
-    image?: StringNullableFilter<"Message"> | string | null
-    video?: StringNullableFilter<"Message"> | string | null
-    audio?: StringNullableFilter<"Message"> | string | null
+    file?: StringNullableFilter<"Message"> | string | null
     sentAt?: DateTimeFilter<"Message"> | Date | string
   }
 
@@ -3024,9 +2998,7 @@ export namespace Prisma {
     sender?: SortOrder
     recipient?: SortOrder
     text?: SortOrder
-    image?: SortOrder
-    video?: SortOrder
-    audio?: SortOrder
+    file?: SortOrder
     sentAt?: SortOrder
   }
 
@@ -3038,9 +3010,7 @@ export namespace Prisma {
     sender?: StringFilter<"Message"> | string
     recipient?: StringFilter<"Message"> | string
     text?: StringNullableFilter<"Message"> | string | null
-    image?: StringNullableFilter<"Message"> | string | null
-    video?: StringNullableFilter<"Message"> | string | null
-    audio?: StringNullableFilter<"Message"> | string | null
+    file?: StringNullableFilter<"Message"> | string | null
     sentAt?: DateTimeFilter<"Message"> | Date | string
   }, "id">
 
@@ -3049,9 +3019,7 @@ export namespace Prisma {
     sender?: SortOrder
     recipient?: SortOrder
     text?: SortOrder
-    image?: SortOrder
-    video?: SortOrder
-    audio?: SortOrder
+    file?: SortOrder
     sentAt?: SortOrder
     _count?: MessageCountOrderByAggregateInput
     _max?: MessageMaxOrderByAggregateInput
@@ -3066,9 +3034,7 @@ export namespace Prisma {
     sender?: StringWithAggregatesFilter<"Message"> | string
     recipient?: StringWithAggregatesFilter<"Message"> | string
     text?: StringNullableWithAggregatesFilter<"Message"> | string | null
-    image?: StringNullableWithAggregatesFilter<"Message"> | string | null
-    video?: StringNullableWithAggregatesFilter<"Message"> | string | null
-    audio?: StringNullableWithAggregatesFilter<"Message"> | string | null
+    file?: StringNullableWithAggregatesFilter<"Message"> | string | null
     sentAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
   }
 
@@ -3150,9 +3116,7 @@ export namespace Prisma {
     sender: string
     recipient: string
     text?: string | null
-    image?: string | null
-    video?: string | null
-    audio?: string | null
+    file?: string | null
     sentAt?: Date | string
   }
 
@@ -3161,9 +3125,7 @@ export namespace Prisma {
     sender: string
     recipient: string
     text?: string | null
-    image?: string | null
-    video?: string | null
-    audio?: string | null
+    file?: string | null
     sentAt?: Date | string
   }
 
@@ -3171,9 +3133,7 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     recipient?: StringFieldUpdateOperationsInput | string
     text?: NullableStringFieldUpdateOperationsInput | string | null
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    video?: NullableStringFieldUpdateOperationsInput | string | null
-    audio?: NullableStringFieldUpdateOperationsInput | string | null
+    file?: NullableStringFieldUpdateOperationsInput | string | null
     sentAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3181,9 +3141,7 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     recipient?: StringFieldUpdateOperationsInput | string
     text?: NullableStringFieldUpdateOperationsInput | string | null
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    video?: NullableStringFieldUpdateOperationsInput | string | null
-    audio?: NullableStringFieldUpdateOperationsInput | string | null
+    file?: NullableStringFieldUpdateOperationsInput | string | null
     sentAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3192,9 +3150,7 @@ export namespace Prisma {
     sender: string
     recipient: string
     text?: string | null
-    image?: string | null
-    video?: string | null
-    audio?: string | null
+    file?: string | null
     sentAt?: Date | string
   }
 
@@ -3202,9 +3158,7 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     recipient?: StringFieldUpdateOperationsInput | string
     text?: NullableStringFieldUpdateOperationsInput | string | null
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    video?: NullableStringFieldUpdateOperationsInput | string | null
-    audio?: NullableStringFieldUpdateOperationsInput | string | null
+    file?: NullableStringFieldUpdateOperationsInput | string | null
     sentAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3212,9 +3166,7 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     recipient?: StringFieldUpdateOperationsInput | string
     text?: NullableStringFieldUpdateOperationsInput | string | null
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    video?: NullableStringFieldUpdateOperationsInput | string | null
-    audio?: NullableStringFieldUpdateOperationsInput | string | null
+    file?: NullableStringFieldUpdateOperationsInput | string | null
     sentAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3355,9 +3307,7 @@ export namespace Prisma {
     sender?: SortOrder
     recipient?: SortOrder
     text?: SortOrder
-    image?: SortOrder
-    video?: SortOrder
-    audio?: SortOrder
+    file?: SortOrder
     sentAt?: SortOrder
   }
 
@@ -3366,9 +3316,7 @@ export namespace Prisma {
     sender?: SortOrder
     recipient?: SortOrder
     text?: SortOrder
-    image?: SortOrder
-    video?: SortOrder
-    audio?: SortOrder
+    file?: SortOrder
     sentAt?: SortOrder
   }
 
@@ -3377,9 +3325,7 @@ export namespace Prisma {
     sender?: SortOrder
     recipient?: SortOrder
     text?: SortOrder
-    image?: SortOrder
-    video?: SortOrder
-    audio?: SortOrder
+    file?: SortOrder
     sentAt?: SortOrder
   }
 

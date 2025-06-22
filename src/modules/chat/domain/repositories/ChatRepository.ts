@@ -7,7 +7,7 @@ import { IChatRepository } from './IChatRepository';
 import { mongo } from '../../../../infra/database/prismaClient';
 
 export class ChatRepository implements IChatRepository {  
-	async save(createChat: CreateChatRequest): Promise<Chat> {
+	  async save(createChat: CreateChatRequest): Promise<Chat> {
         const { name, description, fileURL, participants, creator } = createChat;
         const data = await mongo.chat.create({
             data: {
