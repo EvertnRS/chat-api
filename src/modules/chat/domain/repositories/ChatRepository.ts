@@ -66,7 +66,7 @@ export class ChatRepository implements IChatRepository {
 
       if (search) {
         query.name = {
-          contains: search,
+          startsWith: search,
           mode: 'insensitive'
         };
       }
@@ -75,7 +75,8 @@ export class ChatRepository implements IChatRepository {
         where: query,
         orderBy: {
           lastMessageAt: 'desc'
-        }
+        },
+        take: 20
       });
 
       return data.length > 0 ? data : null;
@@ -100,6 +101,13 @@ export class ChatRepository implements IChatRepository {
                     set: updatedParticipants
                 }
             }
+        });
+    }
+
+    async updateLastMessageTime(chatId: string, newDate : Date): Promise<void> {
+        await mongo.chat.update({
+            where: { id: chatId },
+            data: { lastMessageAt: newDate }
         });
     }
 
