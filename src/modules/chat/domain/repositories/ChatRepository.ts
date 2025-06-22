@@ -7,7 +7,7 @@ import { IChatRepository } from './IChatRepository';
 import { mongo } from '../../../../infra/database/prismaClient';
 
 export class ChatRepository implements IChatRepository {  
-	async save(createChat: CreateChatRequest): Promise<Chat> {
+	  async save(createChat: CreateChatRequest): Promise<Chat> {
         const { name, description, fileURL, participants, creator } = createChat;
         const data = await mongo.chat.create({
             data: {
@@ -66,7 +66,7 @@ export class ChatRepository implements IChatRepository {
 
       if (search) {
         query.name = {
-          contains: search,
+          startsWith: search,
           mode: 'insensitive'
         };
       }
@@ -75,10 +75,40 @@ export class ChatRepository implements IChatRepository {
         where: query,
         orderBy: {
           lastMessageAt: 'desc'
-        }
+        },
+        take: 20
       });
 
       return data.length > 0 ? data : null;
+    }
+
+    async exitChat(id: string, userId: string): Promise<void> {
+        const participants = await mongo.chat.findUnique({
+            where: { id },
+            select: { participants: true }
+        });
+
+        if (!participants || !participants.participants.includes(userId)) {
+            throw new Error('User is not a participant of this chat');
+        }
+
+        const updatedParticipants = participants.participants.filter(participant => participant !== userId);
+
+        await mongo.chat.update({
+            where: { id },
+            data: {
+                participants: {
+                    set: updatedParticipants
+                }
+            }
+        });
+    }
+
+    async updateLastMessageTime(chatId: string, newDate : Date): Promise<void> {
+        await mongo.chat.update({
+            where: { id: chatId },
+            data: { lastMessageAt: newDate }
+        });
     }
 
 }

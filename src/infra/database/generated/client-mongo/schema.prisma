@@ -24,8 +24,6 @@ model Message {
   sender    String // Postgres user id
   recipient String // Mongo chat id
   text      String?
-  image     String?
-  video     String?
-  audio     String?
+  file      String?
   sentAt    DateTime @default(now())
 }

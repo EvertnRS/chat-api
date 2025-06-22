@@ -10,4 +10,6 @@ export interface IChatRepository {
     delete(deleteChat: DeleteChatRequest): Promise<void>;
     findByName(listChats : ListChatsRequest): Promise<Chat[] | null>;
     findById(id: string): Promise<Chat | null>;
+    exitChat(id: string, userId: string): Promise<void>;
+    updateLastMessageTime(chatId: string, newDate : Date): Promise<void>;
 }
