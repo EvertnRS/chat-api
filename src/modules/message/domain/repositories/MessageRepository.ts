@@ -17,13 +17,21 @@ export class MessageRepository implements IMessageRepository {
 
         return data;
     }
-    delete(messageId: string): Promise<Message> {
-        throw new Error("Method not implemented.");
+    
+    async delete(messageId: string): Promise<void> {
+        await mongo.message.delete({
+            where: { id: messageId }
+        });
     }
     update(messageId: string, content: string): Promise<Message> {
         throw new Error("Method not implemented.");
     }
     listMessagesByChatId(chatId: string): Promise<Message[]> {
         throw new Error("Method not implemented.");
+    }
+    findById(messageId: string): Promise<Message | null> {
+        return mongo.message.findUnique({
+            where: { id: messageId }
+        });
     }
 }

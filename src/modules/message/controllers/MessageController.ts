@@ -5,6 +5,7 @@ import { IChatRepository } from "../../chat/domain/repositories/IChatRepository"
 import { IStorageProvider } from "../../../infra/providers/storage/IStorageProvider";
 import { IWebSocketProvider } from "../../../infra/providers/websocket/IWebSocketProvider";
 import { CreateMessage } from "../cases/CreateMessage";
+import { DeleteMessage } from "../cases/DeleteMessage";
 
 export class MessageController {
     constructor(
@@ -34,6 +35,23 @@ export class MessageController {
         try {
             const message = await createMessage.create({ sender, recipient: chatId, content, file });
             return res.status(201).json(message);
+        } catch (error: any) {
+            return res.status(400).json({ error: error.message });
+        }
+    }
+
+    async deleteMessage(req: Request, res: Response) {
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({ error: "Message id is required" });
+        }
+
+        const deleteMessage = new DeleteMessage(this.messageRepository, this.storageProvider);
+
+        try {
+            await deleteMessage.delete(id);
+            return res.status(204).send();
         } catch (error: any) {
             return res.status(400).json({ error: error.message });
         }

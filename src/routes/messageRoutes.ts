@@ -23,6 +23,6 @@ const messageController = new MessageController(messageRepository, userRepositor
 router.use(authenticateToken(jwtProvider));
 router.post('/message/create/:chatId', upload.single('file'), async (req: Request, res: Response) => {messageController.createMessage(req, res)});
 
-
+router.delete('/message/:id', async (req: Request, res: Response) => {messageController.deleteMessage(req, res)});
 
 export default router;
