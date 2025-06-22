@@ -34,10 +34,11 @@ export class SendMessage {
             if (isConnected) {
                 connectedUsers.push(participant);
             } else {
+                const chat = await this.chatRepository.findById(recipient);
                 await this.emailProvider.sendEmail(
                     participant.email,
                     'New Message Notification',
-                    `You have a new message in chat ${recipient}.`
+                    `You have a new message in chat ${chat?.name}.`
                 );
             }
         }
