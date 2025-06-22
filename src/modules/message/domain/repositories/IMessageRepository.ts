@@ -4,7 +4,7 @@ import { Message } from "../../../message/domain/entities/Message";
 
 export interface IMessageRepository {
     save(message: CreateMessageRequest): Promise<Message>;
-    delete(messageId: string): Promise<Message>;
     update(messageId: string, content: string): Promise<Message>;
+    delete(messageId: string): Promise<Message>;
     listMessagesByChatId(chatId: string): Promise<Message[]>;
 }

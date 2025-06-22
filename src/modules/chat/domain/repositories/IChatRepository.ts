@@ -11,4 +11,5 @@ export interface IChatRepository {
     findByName(listChats : ListChatsRequest): Promise<Chat[] | null>;
     findById(id: string): Promise<Chat | null>;
     exitChat(id: string, userId: string): Promise<void>;
+    updateLastMessageTime(chatId: string, newDate : Date): Promise<void>;
 }

@@ -56,6 +56,8 @@ export class CreateMessage {
             });
         }
         
+        new SendMessage(this.webSocketProvider, this.storageProvider, this.chatRepository).send(recipient, content, fileURL);
+
         const message = await this.messageRepository.save({
             sender,
             recipient,
@@ -63,7 +65,6 @@ export class CreateMessage {
             fileURL
         });
 
-        new SendMessage(this.webSocketProvider, this.storageProvider).send(recipient, content, fileURL);
         
         return message;
     }
