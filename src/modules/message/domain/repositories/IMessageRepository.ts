@@ -9,5 +9,4 @@ export interface IMessageRepository {
     delete(messageId: string): Promise<void>;
     listMessagesByChatId(chatId: string): Promise<Message[]>;
     findById(id: string): Promise<Message | null>;
-    findById(messageId: string): Promise<Message | null>;
 }

@@ -4,8 +4,7 @@ import { IUserRepository } from "../../user/domain/repositories/IUserRepository"
 import { IChatRepository } from "../../chat/domain/repositories/IChatRepository";
 import { IStorageProvider } from "../../../infra/providers/storage/IStorageProvider";
 import { IWebSocketProvider } from "../../../infra/providers/websocket/IWebSocketProvider";
-import { CreateMessage, UpdateMessage } from "../cases";
-import { DeleteMessage } from "../cases/DeleteMessage";
+import { CreateMessage, UpdateMessage, DeleteMessage } from "../cases";
 
 export class MessageController {
     constructor(
@@ -40,6 +39,23 @@ export class MessageController {
         }
     }
 
+    async deleteMessage(req: Request, res: Response) {
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({ error: "Message id is required" });
+        }
+
+        const deleteMessage = new DeleteMessage(this.messageRepository, this.storageProvider);
+
+        try {
+            await deleteMessage.delete(id);
+            return res.status(204).send();
+        }  catch (error: any) {
+            return res.status(400).json({ error: error.message });
+        }
+    }
+
     async updateMessage(req: Request, res: Response) {
         const { chatId, messageId } = req.params;
         const { newContent } = req.body;
@@ -63,23 +79,6 @@ export class MessageController {
             const messageUpdated = await updatedMessage.update({ sender, recipient:chatId, messageId, newContent});
             return res.status(200).json({ messageUpdated });
 
-        } catch (error: any) {
-            return res.status(400).json({ error: error.message });
-        }
-    }
-
-    async deleteMessage(req: Request, res: Response) {
-        const { id } = req.params;
-
-        if (!id) {
-            return res.status(400).json({ error: "Message id is required" });
-        }
-
-        const deleteMessage = new DeleteMessage(this.messageRepository, this.storageProvider);
-
-        try {
-            await deleteMessage.delete(id);
-            return res.status(204).send();
         } catch (error: any) {
             return res.status(400).json({ error: error.message });
         }
