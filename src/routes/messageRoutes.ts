@@ -7,6 +7,7 @@ import { JWTProvider } from '../infra/providers/auth/JWTProvider';
 import { S3StorageProvider } from '../infra/providers/storage/S3StorageProvider';
 import { WebSocketProvider } from '../infra/providers/websocket/WebSocketProvider';
 import { MessageController } from '../modules/message/controllers/MessageController';
+import { NodemailerProvider } from '../infra/providers/email/NodeMailerProvider';
 import upload from '../infra/middlewares/multerConfig';
 
 const router = Router();
@@ -15,14 +16,15 @@ const messageRepository = new MessageRepository();
 const chatRepository = new ChatRepository();
 const userRepository = new UserRepository();
 const storageProvider = new S3StorageProvider();
-const webSocketProvider = new WebSocketProvider();
+const webSocketProvider = WebSocketProvider.getInstance();
+const nodemailerProvider = new NodemailerProvider();
 
-const messageController = new MessageController(messageRepository, userRepository,  chatRepository, storageProvider, webSocketProvider);
+const messageController = new MessageController(messageRepository, userRepository, chatRepository, storageProvider, webSocketProvider, nodemailerProvider);
 
 router.use(authenticateToken(jwtProvider));
 router.post('/message/create/:chatId', upload.single('file'), async (req: Request, res: Response) => {messageController.createMessage(req, res)});
 router.put('/message/update/:chatId/:messageId', async (req: Request, res: Response) => {messageController.updateMessage(req, res)});
-
 router.delete('/message/:id', async (req: Request, res: Response) => {messageController.deleteMessage(req, res)});
+router.get('/message/:chatId/', async (req: Request, res: Response) => {messageController.listMessages(req, res)});
 
 export default router;

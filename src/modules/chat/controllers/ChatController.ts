@@ -29,6 +29,7 @@ export class ChatController {
 
         try {
             participants = JSON.parse(req.body.participants);
+            participants.push(creator);
         } catch {
             return res.status(400).json({ error: "Invalid participants format" });
         }

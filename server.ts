@@ -14,7 +14,7 @@ const io = new Server(httpServer, {
   },
 });
 
-const webSocketProvider = new WebSocketProvider();
+const webSocketProvider = WebSocketProvider.getInstance();
 webSocketProvider.setupSocket(io);
 
 app.use(express.json());

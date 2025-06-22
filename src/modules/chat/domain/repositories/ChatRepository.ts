@@ -111,4 +111,25 @@ export class ChatRepository implements IChatRepository {
         });
     }
 
+    async listParticipantsByChatId(chatId: string): Promise<string[]> {
+      const chat = await mongo.chat.findUnique({
+        where: { id: chatId },
+        select: { participants: true }
+      });
+
+      return chat?.participants ?? [];
+    }
+
+    async isUserInChat(chatId: string, userId: string): Promise<boolean> {
+        const chat = await mongo.chat.findUnique({
+            where: { id: chatId },
+            select: { participants: true }
+        });
+
+        if (!chat) {
+            return false;
+        }
+
+        return chat.participants.includes(userId);
+    }
 }

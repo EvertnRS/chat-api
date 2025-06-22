@@ -1,11 +1,12 @@
 import { IWebSocketProvider } from '../../../../infra/providers/websocket/IWebSocketProvider';
+import { UpdateMessageRequest } from '../../../../@types/message/UpdateMessageRequest';
 
 export class SendUpdatedMessage {
     constructor(
         private readonly webSocketProvider: IWebSocketProvider,
     ) {}
 
-    async send(chatId: string, messageId: string, newContent: string): Promise<void> {
-        this.webSocketProvider.sendUpdateMessage({ recipient:chatId, messageId, newContent });
+    async send(updateMessage: UpdateMessageRequest): Promise<void> {
+        this.webSocketProvider.sendUpdateMessage(updateMessage);
     }
 }

@@ -35,10 +35,17 @@ export class UpdateMessage {
         if (message.sender !== sender) {
             throw new Error('You can only update your own messages');
         }
-        
-        new SendUpdatedMessage(this.webSocketProvider).send(recipient, messageId, newContent);
 
-        const updatedMessage = await this.messageRepository.update({sender, recipient, messageId, newContent});
+        const data : UpdateMessageRequest = {
+            sender: user.id,
+            recipient: chat.id,
+            messageId,
+            newContent,
+        };
+        
+        new SendUpdatedMessage(this.webSocketProvider).send(data);
+
+        const updatedMessage = await this.messageRepository.update(data);
 
         return updatedMessage;
     }
