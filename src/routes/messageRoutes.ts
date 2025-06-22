@@ -21,7 +21,7 @@ const messageController = new MessageController(messageRepository, userRepositor
 
 router.use(authenticateToken(jwtProvider));
 router.post('/message/create/:chatId', upload.single('file'), async (req: Request, res: Response) => {messageController.createMessage(req, res)});
-router.post('/message/update/:chatId/:messageId', async (req: Request, res: Response) => {messageController.updateMessage(req, res)});
+router.put('/message/update/:chatId/:messageId', async (req: Request, res: Response) => {messageController.updateMessage(req, res)});
 
 
 
