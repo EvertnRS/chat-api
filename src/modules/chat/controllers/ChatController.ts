@@ -3,6 +3,7 @@ import { IChatRepository } from '../domain/repositories/IChatRepository';
 import { CreateChat, UpdateChat, DeleteChat, ListChats, ExitChat } from '../cases';
 import { IUserRepository } from '../../user/domain/repositories/IUserRepository';
 import { IStorageProvider } from '../../../infra/providers/storage/IStorageProvider';
+import { CreateChatBodySchema, CreateChatFileSchema, CreateChatUserSchema } from '../dto/CreateChatDTO';
 
 interface MulterRequest extends Request {
     file: Express.Multer.File;
@@ -17,28 +18,17 @@ export class ChatController {
     ) {}
 
     async createChat(req: Request, res: Response){
-        const { name, description } = req.body;
-        const photo = req.file;
-        const creator = req.user?.id;
-        
-        if (!creator) {
-            return res.status(400).json({ error: "Creator id is required" });
-        }
-
-        let participants: string[];
-
         try {
-            participants = JSON.parse(req.body.participants);
-            participants.push(creator);
-        } catch {
-            return res.status(400).json({ error: "Invalid participants format" });
-        }
+            console.log(req.body);
+            const body = CreateChatBodySchema.parse({name: req.body.name, description: req.body.description});
+            const photo = CreateChatFileSchema.parse({ file: req.file });
+            const user = CreateChatUserSchema.parse(req.user?.id);
 
-        const createChat = new CreateChat(this.chatRepository, this.userRepository, this.storageProvider);
+            const createChat = new CreateChat(this.chatRepository, this.userRepository, this.storageProvider);
 
-        try {
-            const chat = await createChat.create({ name, description, photo, participants, creator });
+            const chat = await createChat.create({ name:body.name, description:body.description, photo:photo.file, participants:req.body.participants, creator: user.id });
             return res.status(201).json(chat);
+
         } catch (error: any) {
             return res.status(400).json({ error: error.message });
         }

@@ -15,7 +15,6 @@ export function authenticateToken(authProvider: IAuthProvider) {
         let payload: { id: string } | null = null;
         try {
             payload = authProvider.verify(token) as { id: string } | null;
-            console.log('Token payload:', payload);
 
             if (!payload || !payload.id) {
                 res.status(403).json({ error: 'Invalid token payload' });

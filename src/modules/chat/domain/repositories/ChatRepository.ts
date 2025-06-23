@@ -5,9 +5,10 @@ import { ListChatsRequest } from "../../../../@types/chat/ListChatsRequest";
 import { Chat } from '../entities/Chat';
 import { IChatRepository } from './IChatRepository';
 import { mongo } from '../../../../infra/database/prismaClient';
+import { ChatResponse } from '../../../../@types/chat/ChatResponse';
 
 export class ChatRepository implements IChatRepository {  
-	  async save(createChat: CreateChatRequest): Promise<Chat> {
+	  async save(createChat: CreateChatRequest): Promise<ChatResponse> {
         const { name, description, fileURL, participants, creator } = createChat;
         const data = await mongo.chat.create({
             data: {
@@ -19,10 +20,14 @@ export class ChatRepository implements IChatRepository {
             }
         });
 
-        return data;
+        return {
+            ...data,
+            description: data.description === null ? undefined : data.description,
+            photo: data.photo === null ? undefined : data.photo
+        };
     }
 
-    async update(updateChat: UpdateChatRequest, id: string): Promise<Chat> {
+    async update(updateChat: UpdateChatRequest, id: string): Promise<ChatResponse> {
     const { name, description, fileURL, participants } = updateChat;
     const data = await mongo.chat.update({
       where: { id },
@@ -34,7 +39,11 @@ export class ChatRepository implements IChatRepository {
       }
     });
   
-    return data;
+    return {
+            ...data,
+            description: data.description === null ? undefined : data.description,
+            photo: data.photo === null ? undefined : data.photo
+        };
   }
 
   async delete (deleteChat : DeleteChatRequest): Promise<void> {

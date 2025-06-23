@@ -1,3 +1,4 @@
+import { ChatResponse } from "../../../@types/chat/ChatResponse";
 import { UpdateChatRequest } from "../../../@types/chat/UpdateChatRequest";
 import { IStorageProvider } from "../../../infra/providers/storage/IStorageProvider";
 import { IUserRepository } from "../../user/domain/repositories/IUserRepository";
@@ -12,7 +13,7 @@ export class UpdateChat {
     ) 
     {}
 
-    async update({name, description, photo, participants}: UpdateChatRequest, id : string, userId : string): Promise<Chat> {
+    async update({name, description, photo, participants}: UpdateChatRequest, id : string, userId : string): Promise<ChatResponse> {
         const chat = await this.chatRepository.findById(id);
         
         if (!chat) {
