@@ -4,10 +4,11 @@ import { UpdateUserRequest } from '../../../../@types/user/UpdateUserRequest';
 import type { CreateUserRequest } from '../../../../@types/user/CreateUserRequest';
 import type { DeleteUserRequest } from '../../../../@types/user/DeleteUserRequest';
 import { postgres } from '../../../../infra/database/prismaClient';
+import { UserResponse } from '../../../../@types/user/UserResponse';
 
 export class UserRepository implements IUserRepository {
   
-  async save(createUser: CreateUserRequest): Promise<User> {
+  async save(createUser: CreateUserRequest): Promise<UserResponse> {
     const { name, email, hashedPassword } = createUser;
     const data = await postgres.user.create({
       data: {
@@ -17,10 +18,14 @@ export class UserRepository implements IUserRepository {
       }
     });
 
-    return data;
+    return {
+      id: data.id,
+      name: data.name,
+      email: data.email
+    };
   }
   
-  async update(updateUser: UpdateUserRequest, id: string): Promise<User> {
+  async update(updateUser: UpdateUserRequest, id: string): Promise<UserResponse> {
     const { name, email, password } = updateUser;
     const data = await postgres.user.update({
       where: { id },
@@ -31,7 +36,11 @@ export class UserRepository implements IUserRepository {
       }
     });
   
-    return data;
+    return {
+      id: data.id,
+      name: data.name,
+      email: data.email
+    };
   }
 
 async delete (deleteUser : DeleteUserRequest): Promise<void> {

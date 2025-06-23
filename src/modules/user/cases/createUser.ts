@@ -1,5 +1,6 @@
 import { IUserRepository } from '../domain/repositories/IUserRepository';
 import type { CreateUserRequest } from '../../../@types/user/CreateUserRequest';
+import type { UserResponse } from '../../../@types/user/UserResponse';
 import bcrypt from 'bcrypt';
 
 interface CreateUserDTO {
@@ -11,7 +12,7 @@ interface CreateUserDTO {
 export class CreateUser {
     constructor (private userRepository: IUserRepository) {}
     
-    async create({ name, email, password }: CreateUserDTO) {
+    async create({ name, email, password }: CreateUserDTO): Promise<UserResponse> {
         if(!name || !email || !password) {
             throw new Error("Invalid inputs");
         }

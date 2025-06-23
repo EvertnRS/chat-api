@@ -20,6 +20,5 @@ export class DeleteUser {
             }
 
             return await this.userRepository.delete({id});
-            
         }
 }
