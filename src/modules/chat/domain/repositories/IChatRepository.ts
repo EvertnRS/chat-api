@@ -9,7 +9,7 @@ export interface IChatRepository {
     save(createChat: CreateChatRequest): Promise<ChatResponse>;
     update(updateChat: UpdateChatRequest, id: string): Promise<ChatResponse>;
     delete(deleteChat: DeleteChatRequest): Promise<void>;
-    findByName(listChats : ListChatsRequest): Promise<Chat[] | null>;
+    findByName(listChats : ListChatsRequest): Promise<ChatResponse[] | null>;
     findById(id: string): Promise<Chat | null>;
     exitChat(id: string, userId: string): Promise<void>;
     updateLastMessageTime(chatId: string, newDate : Date): Promise<void>;

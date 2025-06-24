@@ -4,9 +4,10 @@ import { ListMessageRequest } from '../../../../@types/message/ListMessageReques
 import { Message } from "../../../message/domain/entities/Message";
 import { IMessageRepository } from "./IMessageRepository";
 import { mongo } from '../../../../infra/database/prismaClient';
+import type { MessageResponse } from "../../../../@types/message/MessageResponse";
 
 export class MessageRepository implements IMessageRepository {
-    async save(createMessage: CreateMessageRequest): Promise<Message> {
+    async save(createMessage: CreateMessageRequest): Promise<MessageResponse> {
         const { sender, recipient, content, fileURL, sentAt } = createMessage;
         const data = await mongo.message.create({
             data: {
@@ -18,7 +19,10 @@ export class MessageRepository implements IMessageRepository {
             }
         });
 
-        return data;
+        return {
+            ...data,
+            sentAt: data.sentAt.toISOString()
+        };
     }
 
     async delete(messageId: string): Promise<void> {
@@ -27,7 +31,7 @@ export class MessageRepository implements IMessageRepository {
         });
     }
 
-    async update(updateMessageRequest: UpdateMessageRequest): Promise<Message> {
+    async update(updateMessageRequest: UpdateMessageRequest): Promise<MessageResponse> {
         const { messageId, newContent } = updateMessageRequest;
         const data = await mongo.message.update({
             where: { id: messageId },
@@ -36,7 +40,10 @@ export class MessageRepository implements IMessageRepository {
             }
         });
 
-        return data;
+        return {
+            ...data,
+            sentAt: data.sentAt.toISOString()
+        };
     }
 
     listMessagesByChatId(listMessagesRequest: ListMessageRequest): Promise<Message[]> {

@@ -64,7 +64,7 @@ export class ChatRepository implements IChatRepository {
       return data;
     }
 
-    async findByName(listChats: ListChatsRequest): Promise<Chat[] | null> {
+    async findByName(listChats: ListChatsRequest): Promise<ChatResponse[] | null> {
       const { search, userId } = listChats;
 
       const query: any = {
@@ -88,7 +88,13 @@ export class ChatRepository implements IChatRepository {
         take: 20
       });
 
-      return data.length > 0 ? data : null;
+      return data.length > 0
+        ? data.map(chat => ({
+            ...chat,
+            description: chat.description === null ? undefined : chat.description,
+            photo: chat.photo === null ? undefined : chat.photo
+          }))
+        : null;
     }
 
     async exitChat(id: string, userId: string): Promise<void> {

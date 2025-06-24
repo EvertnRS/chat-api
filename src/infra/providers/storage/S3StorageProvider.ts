@@ -42,19 +42,34 @@ export class S3StorageProvider implements IStorageProvider {
     mimeType: string;
     oldFileUrl: string;
   }): Promise<string> {
-    const bucketUrlPrefix = `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/`;
-    const key = oldFileUrl.replace(bucketUrlPrefix, '');
+
     const extension = path.extname(fileName);
-    const newKey = `${path.dirname(key)}/${uuidv4()}${extension}`;
+    let newKey: string;
 
-    await this.client.send(new PutObjectCommand({
-      Bucket: process.env.S3_BUCKET_NAME!,
-      Key: newKey,
-      Body: fileBuffer,
-      ContentType: mimeType
-    }));
+    if (oldFileUrl && oldFileUrl.trim() !== '') {
+      const url = new URL(oldFileUrl);
+      const key = url.pathname.startsWith('/') ? url.pathname.slice(1) : url.pathname;
+      newKey = `${path.dirname(key)}/${uuidv4()}${extension}`;
 
-    await this.deleteFile(oldFileUrl);
+      await this.client.send(new PutObjectCommand({
+        Bucket: process.env.S3_BUCKET_NAME!,
+        Key: newKey,
+        Body: fileBuffer,
+        ContentType: mimeType
+      }));
+      await this.deleteFile(oldFileUrl);
+
+    } else {
+      newKey = `${uuidv4()}${extension}`;
+
+
+      await this.client.send(new PutObjectCommand({
+        Bucket: process.env.S3_BUCKET_NAME!,
+        Key: newKey,
+        Body: fileBuffer,
+        ContentType: mimeType
+      }));
+    }
 
     return `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/${newKey}`;
   }

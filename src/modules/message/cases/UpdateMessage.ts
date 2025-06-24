@@ -2,9 +2,9 @@ import { IUserRepository } from '../../user/domain/repositories/IUserRepository'
 import { IChatRepository } from '../../chat/domain/repositories/IChatRepository';
 import { IMessageRepository } from '../domain/repositories/IMessageRepository';
 import { IWebSocketProvider } from '../../../infra/providers/websocket/IWebSocketProvider';
-import { Message } from '../domain/entities/Message';
 import { UpdateMessageRequest } from '../../../@types/message/UpdateMessageRequest';
 import { SendUpdatedMessage } from './send/SendUpdatedMessage';
+import type { MessageResponse } from '../../../@types/message/MessageResponse';
 
 export class UpdateMessage {
     constructor(
@@ -14,7 +14,7 @@ export class UpdateMessage {
         private readonly webSocketProvider: IWebSocketProvider,
     ) {}
 
-    async update(updateMessageRequest : UpdateMessageRequest): Promise<Message> {
+    async update(updateMessageRequest : UpdateMessageRequest): Promise<MessageResponse> {
         const { sender, recipient , messageId, newContent } = updateMessageRequest;
 
         const user = await this.userRepository.findById(sender);

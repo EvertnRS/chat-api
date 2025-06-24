@@ -22,7 +22,7 @@ model Chat {
 model Message {
   id         String   @id @default(uuid()) @map("_id")
   sender     String   // Postgres user id
-  recipient  String   // Mongo chat id
+  recipient  String   
   text       String?
   file       String?
   sentAt     DateTime @default(now())

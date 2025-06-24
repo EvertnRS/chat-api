@@ -10,6 +10,7 @@ export class DeleteChat{
     ){}
 
     async delete(id: string, userId: string): Promise<void> {
+        console.log("Deleting chat with ID:", id, "by user ID:", userId);
         const chat = await this.chatRepository.findById(id);
 
         if (!chat) {

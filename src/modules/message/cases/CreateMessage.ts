@@ -5,8 +5,8 @@ import { IStorageProvider } from '../../../infra/providers/storage/IStorageProvi
 import { IWebSocketProvider } from '../../../infra/providers/websocket/IWebSocketProvider';
 import { IEmailProvider } from '../../../infra/providers/email/IEmailProvider';
 import { CreateMessageRequest } from '../../../@types/message/CreateMessageRequest';
-import { Message } from '../domain/entities/Message';
 import { SendMessage } from './send/SendMessage';
+import type { MessageResponse } from '../../../@types/message/MessageResponse';
 
 export class CreateMessage {
     constructor(
@@ -18,7 +18,7 @@ export class CreateMessage {
         private emailProvider: IEmailProvider
     ) {}
 
-    async create(request: CreateMessageRequest): Promise<Message> {
+    async create(request: CreateMessageRequest): Promise<MessageResponse> {
         const { sender, recipient, content, file, sentAt } = request;
 
         const user = await this.userRepository.findById(sender);
