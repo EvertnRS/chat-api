@@ -1,39 +1,38 @@
-import { io } from '../../../../server';
 import { Server } from 'socket.io';
 import { CreateMessageRequest } from '../../../@types/message/CreateMessageRequest';
 import { UpdateMessageRequest } from '../../../@types/message/UpdateMessageRequest';
 import { ChatRepository } from '../../../modules/chat/domain/repositories/ChatRepository';
-import { IAuthProvider } from '../auth/IAuthProvider';
 import { JWTProvider } from '../auth/JWTProvider';
 
 export class WebSocketProvider {
     private static instance: WebSocketProvider;
     private connectedUsers: Map<string, string>;
+    private io: Server;
 
-    constructor(
-
-    ) {
+    constructor(io: Server) {
+        this.io = io;
         this.connectedUsers = new Map<string, string>();
-    }
-
-    public static getInstance(): WebSocketProvider {
-        if (!WebSocketProvider.instance) {
-        WebSocketProvider.instance = new WebSocketProvider();
         }
-        return WebSocketProvider.instance;
+
+    public static getInstance(io: Server): WebSocketProvider {
+    if (!WebSocketProvider.instance) {
+        WebSocketProvider.instance = new WebSocketProvider(io);
+    }
+    return WebSocketProvider.instance;
     }
 
     async sendNewMessage(sendNewMessageRequest: CreateMessageRequest) {
         const { recipient: chatId } = sendNewMessageRequest
-        io.to(chatId).emit('newMessage', sendNewMessageRequest);
+        this.io.to(chatId).emit('newMessage', sendNewMessageRequest);
     }
 
     async sendUpdateMessage(sendUpdatedMessageRequest: UpdateMessageRequest) {
         const { recipient: chatId } = sendUpdatedMessageRequest
-        io.to(chatId).emit('updateMessage', sendUpdatedMessageRequest);
+        this.io.to(chatId).emit('updateMessage', sendUpdatedMessageRequest);
     }
 
     async setupSocket(io: Server) {
+        this.io = io;
         io.use((socket, next) => {
             const token = socket.handshake.headers.authentication as string | undefined;
 
@@ -81,6 +80,7 @@ export class WebSocketProvider {
     }
 
     async isUserConnected(userId: string): Promise<boolean> {
+        console.log(this.connectedUsers)
         return this.connectedUsers.has(userId);
     }
 }   
