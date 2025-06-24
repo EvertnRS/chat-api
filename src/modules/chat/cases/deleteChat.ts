@@ -10,14 +10,19 @@ export class DeleteChat{
     ){}
 
     async delete(id: string, userId: string): Promise<void> {
-        console.log("Deleting chat with ID:", id, "by user ID:", userId);
         const chat = await this.chatRepository.findById(id);
 
         if (!chat) {
             throw new Error("Chat not found");
         }
 
-        if (chat.creator !== userId) {
+        const user = await this.userRepository.findById(userId);
+
+        if (!user) {
+            throw new Error("Chat not found");
+        }
+
+        if (chat.creator !== user.id) {
             throw new Error("Only the creator can delete the chat");
         }
 

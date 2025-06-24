@@ -75,13 +75,15 @@ export class S3StorageProvider implements IStorageProvider {
   }
 
   async deleteFile(fileUrl: string): Promise<void> {
-    const bucketUrlPrefix = `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/`;
-    const key = fileUrl.replace(bucketUrlPrefix, '');
+    if (fileUrl && fileUrl.trim() !== '') {
+      const bucketUrlPrefix = `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/`;
+      const key = fileUrl.replace(bucketUrlPrefix, '');
 
-    await this.client.send(new DeleteObjectCommand({
-      Bucket: process.env.S3_BUCKET_NAME!,
-      Key: key
-    }));
+      await this.client.send(new DeleteObjectCommand({
+        Bucket: process.env.S3_BUCKET_NAME!,
+        Key: key
+      }));
+    }
   }
 
   async getFile(fileUrl: string): Promise<string> {

@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import { CreateUser, UpdateUser, DeleteUser } from '../cases';
 import { IUserRepository } from '../domain/repositories/IUserRepository';
 import { CreateUserSchema } from '../dto/CreateUserDTO';
-import { UpdateUserBodySchema, UpdateUserParamsSchema } from '../dto/UpdateUserDTO';
-import { DeleteUserParamsSchema, DeleteUserBodySchema } from '../dto/DeleteUserDTO';
+import { UpdateUserBodySchema } from '../dto/UpdateUserDTO';
+import { DeleteUserBodySchema } from '../dto/DeleteUserDTO';
+import { UserParamsSchema } from '../dto/IdUserParamsSchema';
 
 export class UserController {
     constructor(
@@ -24,7 +25,7 @@ export class UserController {
 
     async update (req: Request, res: Response) {    
         try {
-            const params = UpdateUserParamsSchema.parse(req.params);
+            const params = UserParamsSchema.parse(req.params);
             const data = UpdateUserBodySchema.parse(req.body);
 
             const updateUser = new UpdateUser(this.userRepository);
@@ -37,7 +38,7 @@ export class UserController {
 
     async delete (req: Request, res: Response) {
         try {
-            const params = DeleteUserParamsSchema.parse(req.params);
+            const params = UserParamsSchema.parse(req.params);
             const body = DeleteUserBodySchema.parse(req.body);
 
             const deleteUser = new DeleteUser(this.userRepository);

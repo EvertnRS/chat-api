@@ -3,7 +3,7 @@ import { IChatRepository } from '../domain/repositories/IChatRepository';
 import { CreateChat, UpdateChat, DeleteChat, ListChats, ExitChat } from '../cases';
 import { IUserRepository } from '../../user/domain/repositories/IUserRepository';
 import { IStorageProvider } from '../../../infra/providers/storage/IStorageProvider';
-import { CreateChatBodySchema, UpdateChatBodySchema, ChatParamsSchema, ChatFileSchema, ListChatsQuerySchema } from '../dto';
+import { CreateChatBodySchema, UpdateChatBodySchema, ChatParamsSchema, ListChatQuerySchema } from '../dto';
 import { ChatResponse } from '../../../@types/chat/ChatResponse';
 import { UserParamsSchema } from '../../user/dto';
 
@@ -38,9 +38,8 @@ export class ChatController {
 
         
         try {
-            const body = CreateChatBodySchema.parse({ name: req.body.name, description: req.body.description, participants: participantsArray });
+            const body = CreateChatBodySchema.parse({ name: req.body.name, description: req.body.description, participants: participantsArray, file: req.file });
             
-            const photo = ChatFileSchema.parse({ file: req.file });
             const user = UserParamsSchema.parse({ id: req.user?.id });
             
             participantsArray.push(user.id);
@@ -49,7 +48,7 @@ export class ChatController {
             const chat: ChatResponse = await createChat.create({
                 name: body.name,
                 description: body.description,
-                photo: photo.file,
+                photo: body.file,
                 participants: participantsArray,
                 creator: user.id,
             });
@@ -81,15 +80,13 @@ export class ChatController {
         
         try {
             const updateChat = new UpdateChat(this.chatRepository, this.userRepository, this.storageProvider);
-            const body = UpdateChatBodySchema.parse({ name: req.body.name, description: req.body.description, participants: participantsArray });
-
-            const photo = ChatFileSchema.parse({ file: req.file });
+            const body = UpdateChatBodySchema.parse({ name: req.body.name, description: req.body.description, participants: participantsArray, file: req.file });
             const user = UserParamsSchema.parse({ id: req.user?.id });
             const { id } = ChatParamsSchema.parse({id: req.params.id});
             const chat: ChatResponse = await updateChat.update({ 
                 name: body.name, 
                 description: body.description, 
-                photo: photo.file, 
+                photo: body.file, 
                 participants: participantsArray 
             }, id, user.id);
             return res.status(200).json(chat);
@@ -114,10 +111,10 @@ export class ChatController {
 
     async listChats(req: Request, res: Response) {
         try {
-            const searchTerm = ListChatsQuerySchema.parse(req.query).search || '';
+            const { page = 1, limit = 10, searchTerm } = ListChatQuerySchema.parse(req.query.searchTerm ? { ...req.query, searchTerm: req.query.searchTerm } : req.query);
             const userId = UserParamsSchema.parse({ id: req.user?.id }).id;
-            const listChats = new ListChats(this.chatRepository);
-            const chats: ChatResponse[] = (await listChats.list(searchTerm, userId)) || [];
+            const listChats = new ListChats(this.chatRepository, this.userRepository);
+            const chats: ChatResponse[] = (await listChats.list(searchTerm ?? '', page, limit, userId)) || [];
             return res.status(200).json(chats);
         } catch (error: any) {
             return res.status(400).json({ error: error.message });
@@ -129,7 +126,7 @@ export class ChatController {
         try {
             const userId = UserParamsSchema.parse({ id: req.user?.id }).id;
             const { id } = ChatParamsSchema.parse({id: req.params.id});
-            const exitChat = new ExitChat(this.chatRepository);
+            const exitChat = new ExitChat(this.chatRepository, this.userRepository);
             await exitChat.exit(id, userId);
             return res.status(200).json({ message: "Successfully exited the chat" });
         } catch (error: any) {

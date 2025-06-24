@@ -9,6 +9,6 @@ export interface IMessageRepository {
     save(message: CreateMessageRequest): Promise<MessageResponse>;
     update(updateMessageRequest : UpdateMessageRequest): Promise<MessageResponse>;
     delete(messageId: string): Promise<void>;
-    listMessagesByChatId(listMessagesRequest: ListMessageRequest): Promise<Message[]>;
+    listMessagesByChatId(listMessagesRequest: ListMessageRequest): Promise<MessageResponse[]>;
     findById(id: string): Promise<Message | null>;
 }

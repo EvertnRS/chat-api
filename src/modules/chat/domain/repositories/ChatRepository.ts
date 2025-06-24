@@ -65,17 +65,13 @@ export class ChatRepository implements IChatRepository {
     }
 
     async findByName(listChats: ListChatsRequest): Promise<ChatResponse[] | null> {
-      const { search, userId } = listChats;
+      const { search, page = 1, limit = 10, userId } = listChats;
 
-      const query: any = {
-        participants: {
-          has: userId
-        }
-      };
+      const query: any = {};
 
       if (search) {
         query.name = {
-          startsWith: search,
+          contains: search,
           mode: 'insensitive'
         };
       }
@@ -85,7 +81,8 @@ export class ChatRepository implements IChatRepository {
         orderBy: {
           lastMessageAt: 'desc'
         },
-        take: 20
+        skip: (page - 1) * limit,
+        take: limit
       });
 
       return data.length > 0

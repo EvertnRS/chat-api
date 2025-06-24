@@ -6,7 +6,7 @@ import { IStorageProvider } from "../../../infra/providers/storage/IStorageProvi
 import { IWebSocketProvider } from "../../../infra/providers/websocket/IWebSocketProvider";
 import { IEmailProvider } from "../../../infra/providers/email/IEmailProvider";
 import { CreateMessage, UpdateMessage, DeleteMessage, ListMessages } from "../cases";
-import { CreateMessageBodySchema, MessageFileSchema, MessageParamsSchema, MessageListQuerySchema } from "../domain/dto/";
+import { CreateMessageBodySchema, MessageParamsSchema, MessageListQuerySchema } from "../domain/dto/";
 import { ChatParamsSchema } from "../../chat/dto";
 import { UserParamsSchema } from "../../user/dto";
 
@@ -22,9 +22,8 @@ export class MessageController {
 
     async createMessage(req: Request, res: Response) {
         try {
-            const { id: chatId } = ChatParamsSchema.parse(req.params);
-            const { content } = CreateMessageBodySchema.parse(req.body);
-            const { file } = MessageFileSchema.parse({ file: req.file });
+            const { id: chatId } = ChatParamsSchema.parse({id: req.params.chatId});
+            const { content, file } = CreateMessageBodySchema.parse({content: req.body.content, file: req.file});
             const sender = UserParamsSchema.parse({ id: req.user?.id }).id;
             const createMessage = new CreateMessage(this.messageRepository, this.userRepository, this.chatRepository, this.storageProvider, this.webSocketProvider, this.EmailProvider);
     
@@ -39,8 +38,9 @@ export class MessageController {
     async deleteMessage(req: Request, res: Response) {
         try {
             const { id } = MessageParamsSchema.parse(req.params);
-            const deleteMessage = new DeleteMessage(this.messageRepository, this.storageProvider);
-            await deleteMessage.delete(id);
+            const sender = UserParamsSchema.parse({ id: req.user?.id }).id;
+            const deleteMessage = new DeleteMessage(this.messageRepository, this.storageProvider, this.userRepository, this.chatRepository);
+            await deleteMessage.delete(id, sender);
             return res.status(204).send();
         }  catch (error: any) {
             return res.status(400).json({ error: error.message });
@@ -49,10 +49,10 @@ export class MessageController {
 
     async updateMessage(req: Request, res: Response) {
         try{
-            const { id: messageId } = MessageParamsSchema.parse(req.params);
-            const { id: chatId } = ChatParamsSchema.parse(req.params);
+            const { id: messageId } = MessageParamsSchema.parse({id: req.params.messageId});
+            const { id: chatId } = ChatParamsSchema.parse({id: req.params.chatId});
             const sender = UserParamsSchema.parse({ id: req.user?.id }).id;
-            const { content: newContent } = CreateMessageBodySchema.parse(req.body);
+            const { content: newContent } = CreateMessageBodySchema.parse({content: req.body.newContent});
             const updatedMessage = new UpdateMessage(this.userRepository, this.chatRepository, this.messageRepository, this.webSocketProvider);
             const messageUpdated = await updatedMessage.update({ sender, recipient:chatId, messageId, newContent});
             return res.status(200).json({ messageUpdated });
@@ -64,10 +64,11 @@ export class MessageController {
 
     async listMessages(req: Request, res: Response) { 
         try {
-            const { id: chatId } = ChatParamsSchema.parse(req.params);
+            const { id: chatId } = ChatParamsSchema.parse({id: req.params.chatId});
             const { page = 1, limit = 10 } = MessageListQuerySchema.parse(req.query);
-            const listMessages = new ListMessages(this.messageRepository, this.chatRepository);
-            const messages = await listMessages.listMessages({ chatId, page, limit });
+            const sender = UserParamsSchema.parse({ id: req.user?.id }).id;
+            const listMessages = new ListMessages(this.messageRepository, this.chatRepository, this.userRepository);
+            const messages = await listMessages.listMessages({ chatId, page, limit }, sender);
             return res.status(200).json(messages);
         } catch (error: any) {
             return res.status(400).json({ error: error.message });

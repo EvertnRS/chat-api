@@ -46,10 +46,10 @@ export class MessageRepository implements IMessageRepository {
         };
     }
 
-    listMessagesByChatId(listMessagesRequest: ListMessageRequest): Promise<Message[]> {
+    async listMessagesByChatId(listMessagesRequest: ListMessageRequest): Promise<MessageResponse[]> {
         const { chatId, page = 1, limit = 10 } = listMessagesRequest;
 
-        return mongo.message.findMany({
+        const messages = await mongo.message.findMany({
             where: { 
                 recipient: chatId 
                 },
@@ -57,6 +57,11 @@ export class MessageRepository implements IMessageRepository {
             skip: (page - 1) * limit,
             take: limit
         });
+
+        return messages.map(message => ({
+            ...message,
+            sentAt: message.sentAt.toISOString()
+        }));
     }
 
     async findById(id: string): Promise<Message | null> {

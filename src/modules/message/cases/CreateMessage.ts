@@ -26,11 +26,16 @@ export class CreateMessage {
             throw new Error('User not found');
         }
 
+        
         const chat = await this.chatRepository.findById(recipient);
         if (!chat) {
             throw new Error('Chat not found');
         }
 
+        if (sender != user.id || !chat.participants.includes(sender)) {
+            throw new Error('Sender does not match user ID or is not a participant in the chat');
+        }
+        
         let folder = '';
         let fileURL: string | undefined;
 

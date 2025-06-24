@@ -27,12 +27,16 @@ export class UpdateMessage {
             throw new Error('Chat not found');
         }
 
+        if (!chat.participants.includes(user.id)) {
+            throw new Error('User is not a participant of the chat');
+        }
+
         const message = await this.messageRepository.findById(messageId);
         if (!message) {
             throw new Error('Message not found');
         }
 
-        if (message.sender !== sender) {
+        if (message.sender !== user.id) {
             throw new Error('You can only update your own messages');
         }
 

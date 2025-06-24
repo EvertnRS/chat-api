@@ -13,12 +13,11 @@ import {
   CreateChatBodySchema,
   UpdateChatBodySchema,
   ChatParamsSchema,
-  ListChatsQuerySchema
+  ListChatQuerySchema
 } from '../../modules/chat/dto';
 
 import {
   CreateMessageBodySchema,
-  MessageFileSchema,
   MessageParamsSchema,
   MessageListQuerySchema
 } from '../../modules/message/domain/dto';
@@ -42,9 +41,8 @@ registry.register('UserParams', UserParamsSchema);
 registry.register('CreateChatBody', CreateChatBodySchema);
 registry.register('UpdateChatBody', UpdateChatBodySchema);
 registry.register('ChatParams', ChatParamsSchema);
-registry.register('ListChatsQuery', ListChatsQuerySchema);
+registry.register('ListChatsQuery', ListChatQuerySchema);
 registry.register('CreateMessageBody', CreateMessageBodySchema);
-registry.register('MessageFile', MessageFileSchema);
 registry.register('MessageParams', MessageParamsSchema);
 registry.register('MessageListQuery', MessageListQuerySchema);
 
@@ -125,6 +123,7 @@ registry.registerPath({
     },
     400: { description: 'Validation error' },
   },
+  security: [{ bearerAuth: [] }],
 });
 
 registry.registerPath({
@@ -145,6 +144,7 @@ registry.registerPath({
     204: { description: 'User deleted' },
     400: { description: 'Validation error' },
   },
+  security: [{ bearerAuth: [] }],
 });
 
 
@@ -212,7 +212,7 @@ registry.registerPath({
   path: '/chats',
   tags: ['Chats'],
   request: {
-    query: ListChatsQuerySchema,
+    query: ListChatQuerySchema,
   },
   responses: {
     200: {
