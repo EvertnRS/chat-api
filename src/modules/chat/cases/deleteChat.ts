@@ -16,7 +16,13 @@ export class DeleteChat{
             throw new Error("Chat not found");
         }
 
-        if (chat.creator !== userId) {
+        const user = await this.userRepository.findById(userId);
+
+        if (!user) {
+            throw new Error("Chat not found");
+        }
+
+        if (chat.creator !== user.id) {
             throw new Error("Only the creator can delete the chat");
         }
 

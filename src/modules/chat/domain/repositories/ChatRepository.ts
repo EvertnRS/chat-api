@@ -5,9 +5,10 @@ import { ListChatsRequest } from "../../../../@types/chat/ListChatsRequest";
 import { Chat } from '../entities/Chat';
 import { IChatRepository } from './IChatRepository';
 import { mongo } from '../../../../infra/database/prismaClient';
+import { ChatResponse } from '../../../../@types/chat/ChatResponse';
 
 export class ChatRepository implements IChatRepository {  
-	  async save(createChat: CreateChatRequest): Promise<Chat> {
+	  async save(createChat: CreateChatRequest): Promise<ChatResponse> {
         const { name, description, fileURL, participants, creator } = createChat;
         const data = await mongo.chat.create({
             data: {
@@ -19,10 +20,14 @@ export class ChatRepository implements IChatRepository {
             }
         });
 
-        return data;
+        return {
+            ...data,
+            description: data.description === null ? undefined : data.description,
+            photo: data.photo === null ? undefined : data.photo
+        };
     }
 
-    async update(updateChat: UpdateChatRequest, id: string): Promise<Chat> {
+    async update(updateChat: UpdateChatRequest, id: string): Promise<ChatResponse> {
     const { name, description, fileURL, participants } = updateChat;
     const data = await mongo.chat.update({
       where: { id },
@@ -34,7 +39,11 @@ export class ChatRepository implements IChatRepository {
       }
     });
   
-    return data;
+    return {
+            ...data,
+            description: data.description === null ? undefined : data.description,
+            photo: data.photo === null ? undefined : data.photo
+        };
   }
 
   async delete (deleteChat : DeleteChatRequest): Promise<void> {
@@ -55,18 +64,14 @@ export class ChatRepository implements IChatRepository {
       return data;
     }
 
-    async findByName(listChats: ListChatsRequest): Promise<Chat[] | null> {
-      const { search, userId } = listChats;
+    async findByName(listChats: ListChatsRequest): Promise<ChatResponse[] | null> {
+      const { search, page = 1, limit = 10, userId } = listChats;
 
-      const query: any = {
-        participants: {
-          has: userId
-        }
-      };
+      const query: any = {};
 
       if (search) {
         query.name = {
-          startsWith: search,
+          contains: search,
           mode: 'insensitive'
         };
       }
@@ -76,10 +81,17 @@ export class ChatRepository implements IChatRepository {
         orderBy: {
           lastMessageAt: 'desc'
         },
-        take: 20
+        skip: (page - 1) * limit,
+        take: limit
       });
 
-      return data.length > 0 ? data : null;
+      return data.length > 0
+        ? data.map(chat => ({
+            ...chat,
+            description: chat.description === null ? undefined : chat.description,
+            photo: chat.photo === null ? undefined : chat.photo
+          }))
+        : null;
     }
 
     async exitChat(id: string, userId: string): Promise<void> {

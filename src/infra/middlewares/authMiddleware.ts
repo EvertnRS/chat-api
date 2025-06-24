@@ -12,9 +12,15 @@ export function authenticateToken(authProvider: IAuthProvider) {
 
         const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
 
-        let payload;
+        let payload: { id: string } | null = null;
         try {
-            payload = authProvider.verify(token) as { id: string };
+            payload = authProvider.verify(token) as { id: string } | null;
+
+            if (!payload || !payload.id) {
+                res.status(403).json({ error: 'Invalid token payload' });
+                return;
+            }
+
         } catch {
             res.status(403).json({ error: 'Invalid token' });
             return;
@@ -22,6 +28,5 @@ export function authenticateToken(authProvider: IAuthProvider) {
 
         req.user = { id: payload.id };
         next();
-
     };
 }

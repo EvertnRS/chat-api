@@ -3,6 +3,7 @@ import { IStorageProvider } from "../../../infra/providers/storage/IStorageProvi
 import { IUserRepository } from "../../user/domain/repositories/IUserRepository";
 import { IChatRepository } from "../domain/repositories/IChatRepository";
 import { Chat } from "../domain/entities/Chat";
+import { ChatResponse } from "../../../@types/chat/ChatResponse";
 
 
 export class CreateChat {
@@ -13,7 +14,7 @@ export class CreateChat {
     ) 
     {}
 
-    async create({ name, description, photo, participants, creator }: CreateChatRequest): Promise<Chat> {
+    async create({ name, description, photo, participants, creator }: CreateChatRequest): Promise<ChatResponse> {
         if (!name || !participants || participants.length === 0) {
             throw new Error("Invalid chat data");
         }
@@ -43,7 +44,7 @@ export class CreateChat {
             creator
         };
         
-        return this.chatRepository.save(createChat);
+        return await this.chatRepository.save(createChat);
     }
 
 }

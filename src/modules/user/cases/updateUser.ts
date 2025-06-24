@@ -1,11 +1,12 @@
 import { IUserRepository } from '../domain/repositories/IUserRepository';
 import type { UpdateUserRequest } from '../../../@types/user/UpdateUserRequest';
+import type { UserResponse } from '../../../@types/user/UserResponse';
 import bcrypt from 'bcrypt';
 
 export class UpdateUser {
     constructor(private userRepository: IUserRepository) {}
 
-    async update({ name, email, password }: UpdateUserRequest, id: string) {
+    async update({ name, email, password }: UpdateUserRequest, id: string): Promise<UserResponse> {
         if (!id) {
             throw new Error("User ID is required");
         }

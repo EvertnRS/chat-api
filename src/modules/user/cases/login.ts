@@ -2,6 +2,7 @@ import { IUserRepository } from '../domain/repositories/IUserRepository';
 import { LoginDTO } from '../../../@types/user/LoginRequest';
 import { IAuthProvider } from '../../../infra/providers/auth/IAuthProvider';
 import bcrypt from 'bcrypt';
+import { LoginResponse } from '../../../@types/user/LoginResponse';
 
 
 export class Login {
@@ -9,7 +10,7 @@ export class Login {
                  private authProvider: IAuthProvider
     ) {}
     
-    async login({ email, password }: LoginDTO) {
+    async login({ email, password }: LoginDTO): Promise<LoginResponse> {
         if(!email || !password) {
             throw new Error("Invalid inputs");
         }
@@ -26,6 +27,9 @@ export class Login {
 
         const token = this.authProvider.sign({ id: user.id });
 
-        return { token };
+        return { 
+            user: { id: user.id },
+            token 
+        };
     }
 }

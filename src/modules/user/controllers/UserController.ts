@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { CreateUser, UpdateUser, DeleteUser } from '../cases';
 import { IUserRepository } from '../domain/repositories/IUserRepository';
+import { CreateUserSchema } from '../dto/CreateUserDTO';
+import { UpdateUserBodySchema } from '../dto/UpdateUserDTO';
+import { DeleteUserBodySchema } from '../dto/DeleteUserDTO';
+import { UserParamsSchema } from '../dto/IdUserParamsSchema';
 
 export class UserController {
     constructor(
@@ -8,11 +12,10 @@ export class UserController {
         ) {}
     
     async register (req: Request, res: Response) {
-        const { name, email, password } = req.body;
-        const createUser = new CreateUser(this.userRepository);
-        
         try {
-            const result = await createUser.create({ name, email, password }); 
+            const data = CreateUserSchema.parse(req.body);
+            const createUser = new CreateUser(this.userRepository);
+            const result = await createUser.create(data); 
             return res.status(201).json(result);
             
         } catch (error: any) {
@@ -20,14 +23,13 @@ export class UserController {
         }
     }
 
-    async update (req: Request, res: Response) {
-        const { id } = req.params;
-        const { name, email, password } = req.body;
-
-        const updateUser = new UpdateUser(this.userRepository);
-        
+    async update (req: Request, res: Response) {    
         try {
-            const result = await updateUser.update({ name, email, password }, id);
+            const params = UserParamsSchema.parse(req.params);
+            const data = UpdateUserBodySchema.parse(req.body);
+
+            const updateUser = new UpdateUser(this.userRepository);
+            const result = await updateUser.update(data, params.id);
             return res.status(200).json(result);
         } catch (error: any) {
             return res.status(400).json({ error: error.message });
@@ -35,13 +37,12 @@ export class UserController {
     }
 
     async delete (req: Request, res: Response) {
-        const { id } = req.params;
-        const { password } = req.body;
-
-        const deleteUser = new DeleteUser(this.userRepository);
-
         try {
-            await deleteUser.delete(password, id);
+            const params = UserParamsSchema.parse(req.params);
+            const body = DeleteUserBodySchema.parse(req.body);
+
+            const deleteUser = new DeleteUser(this.userRepository);
+            await deleteUser.delete(body.password, params.id);
             return res.status(204).json();
             
         } catch (error: any) {

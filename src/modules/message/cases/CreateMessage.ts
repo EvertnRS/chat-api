@@ -5,8 +5,8 @@ import { IStorageProvider } from '../../../infra/providers/storage/IStorageProvi
 import { IWebSocketProvider } from '../../../infra/providers/websocket/IWebSocketProvider';
 import { IEmailProvider } from '../../../infra/providers/email/IEmailProvider';
 import { CreateMessageRequest } from '../../../@types/message/CreateMessageRequest';
-import { Message } from '../domain/entities/Message';
 import { SendMessage } from './send/SendMessage';
+import type { MessageResponse } from '../../../@types/message/MessageResponse';
 
 export class CreateMessage {
     constructor(
@@ -18,7 +18,7 @@ export class CreateMessage {
         private emailProvider: IEmailProvider
     ) {}
 
-    async create(request: CreateMessageRequest): Promise<Message> {
+    async create(request: CreateMessageRequest): Promise<MessageResponse> {
         const { sender, recipient, content, file, sentAt } = request;
 
         const user = await this.userRepository.findById(sender);
@@ -26,11 +26,16 @@ export class CreateMessage {
             throw new Error('User not found');
         }
 
+        
         const chat = await this.chatRepository.findById(recipient);
         if (!chat) {
             throw new Error('Chat not found');
         }
 
+        if (sender != user.id || !chat.participants.includes(sender)) {
+            throw new Error('Sender does not match user ID or is not a participant in the chat');
+        }
+        
         let folder = '';
         let fileURL: string | undefined;
 
