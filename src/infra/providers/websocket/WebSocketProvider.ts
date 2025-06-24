@@ -14,11 +14,15 @@ export class WebSocketProvider {
         this.connectedUsers = new Map<string, string>();
         }
 
-    public static getInstance(io: Server): WebSocketProvider {
-    if (!WebSocketProvider.instance) {
-        WebSocketProvider.instance = new WebSocketProvider(io);
+    public static getInstance(): WebSocketProvider {
+        return WebSocketProvider.instance;
     }
-    return WebSocketProvider.instance;
+
+    public static startInstance(io: Server): WebSocketProvider {
+        if (!WebSocketProvider.instance) {
+            WebSocketProvider.instance = new WebSocketProvider(io);
+        }
+        return WebSocketProvider.instance;
     }
 
     async sendNewMessage(sendNewMessageRequest: CreateMessageRequest) {
