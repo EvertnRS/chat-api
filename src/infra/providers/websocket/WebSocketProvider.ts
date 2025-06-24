@@ -81,7 +81,6 @@ export class WebSocketProvider {
     }
 
     async isUserConnected(userId: string): Promise<boolean> {
-        console.log(this.connectedUsers)
         return this.connectedUsers.has(userId);
     }
 }   
