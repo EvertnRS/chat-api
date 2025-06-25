@@ -27,8 +27,9 @@ app.use('/', userRoutes);
 app.use('/', chatRoutes);
 app.use('/', messageRoutes);
 
-httpServer.listen(3000, () => {
-  console.log("Server ta rodandinho na portinha http://localhost:3000");
+httpServer.listen(3000, '0.0.0.0', () => {
+  console.log('Server rodando na porta 3000');
 });
+
 
 export { io };
