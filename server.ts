@@ -12,7 +12,7 @@ import { swaggerDocument } from "./src/infra/swagger/swagger";
 const app = express();
 
 app.use(cors({
-  origin: "*",
+  origin: "http://localhost:5173",
   credentials: true,
 }));
 
@@ -22,7 +22,7 @@ const httpServer = http.createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
+    origin: "http://localhost:5173",
     credentials: true,
   },
 });
