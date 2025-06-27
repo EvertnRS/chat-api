@@ -27,7 +27,7 @@ const io = new Server(httpServer, {
   },
 });
 
-const webSocketProvider = WebSocketProvider.getInstance();
+const webSocketProvider = WebSocketProvider.startInstance(io);
 webSocketProvider.setupSocket(io);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
