@@ -10,21 +10,45 @@ import { MessageController } from '../modules/message/controllers/MessageControl
 import { NodemailerProvider } from '../infra/providers/email/NodeMailerProvider';
 import upload from '../infra/middlewares/multerConfig';
 
-const router = Router();
-const jwtProvider = new JWTProvider();
-const messageRepository = new MessageRepository();
-const chatRepository = new ChatRepository();
-const userRepository = new UserRepository();
-const storageProvider = new S3StorageProvider();
-const webSocketProvider = WebSocketProvider.getInstance();
-const nodemailerProvider = new NodemailerProvider();
+export function createMessageRoutes(webSocketProvider: WebSocketProvider) {
+  const router = Router();
+  const jwtProvider = new JWTProvider();
+  const messageRepository = new MessageRepository();
+  const chatRepository = new ChatRepository();
+  const userRepository = new UserRepository();
+  const storageProvider = new S3StorageProvider();
+  const nodemailerProvider = new NodemailerProvider();
 
-const messageController = new MessageController(messageRepository, userRepository, chatRepository, storageProvider, webSocketProvider, nodemailerProvider);
+  const messageController = new MessageController(
+    messageRepository,
+    userRepository,
+    chatRepository,
+    storageProvider,
+    webSocketProvider,
+    nodemailerProvider
+  );
 
-router.use(authenticateToken(jwtProvider));
-router.post('/message/create/:chatId', upload.single('file'), async (req: Request, res: Response) => {messageController.createMessage(req, res)});
-router.put('/message/update/:chatId/:messageId', async (req: Request, res: Response) => {messageController.updateMessage(req, res)});
-router.delete('/message/:id', async (req: Request, res: Response) => {messageController.deleteMessage(req, res)});
-router.get('/message/:chatId/', async (req: Request, res: Response) => {messageController.listMessages(req, res)});
+  router.use(authenticateToken(jwtProvider));
+  router.post('/message/create/:chatId', upload.single('file'), async (req, res) => {
+    await messageController.createMessage(req, res);
+  });
+  router.put('/message/update/:chatId/:messageId', async (req, res) => {
+    await messageController.updateMessage(req, res);
+  });
+  router.delete('/message/:id', async (req, res, next) => {
+    try {
+      await messageController.deleteMessage(req, res);
+    } catch (error) {
+      next(error);
+    }
+  });
+  router.get('/message/:chatId/', async (req, res, next) => {
+    try {
+      await messageController.listMessages(req, res);
+    } catch (error) {
+      next(error);
+    }
+  });
 
-export default router;
+  return router;
+}
