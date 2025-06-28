@@ -71,8 +71,8 @@ export class ChatRepository implements IChatRepository {
 
       if (search) {
         query.name = {
-          contains: search,
-          mode: 'insensitive'
+          contains: search
+          // mode: 'insensitive'
         };
       }
 
