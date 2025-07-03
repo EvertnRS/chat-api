@@ -28,7 +28,11 @@ export class Login {
         const token = this.authProvider.sign({ id: user.id });
 
         return { 
-            user: { id: user.id },
+            user: { 
+                id: user.id,
+                name: user.name,
+                email: user.email
+            },
             token 
         };
     }
