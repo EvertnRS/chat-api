@@ -6,7 +6,8 @@ import {
   LoginSchema,
   UpdateUserBodySchema,
   DeleteUserBodySchema,
-  UserParamsSchema
+  UserParamsSchema,
+  UserQuerySchema
 } from '../../modules/user/dto';
 
 import {
@@ -118,6 +119,27 @@ registry.registerPath({
       content: {
         'application/json': {
           schema: UserResponseSchema,
+        },
+      },
+    },
+    400: { description: 'Validation error' },
+  },
+  security: [{ bearerAuth: [] }],
+});
+
+registry.registerPath({
+  method: 'get',
+  path: '/users/?id={id}',
+  tags: ['Users'],
+  request: {
+    query: UserQuerySchema,
+  },
+  responses: {
+    200: {
+      description: 'List of users',
+      content: {
+        'application/json': {
+          schema: z.array(UserResponseSchema),
         },
       },
     },

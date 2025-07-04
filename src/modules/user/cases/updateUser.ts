@@ -6,15 +6,21 @@ import bcrypt from 'bcrypt';
 export class UpdateUser {
     constructor(private userRepository: IUserRepository) {}
 
-    async update({ name, email, password }: UpdateUserRequest, id: string): Promise<UserResponse> {
+    async update({ name, email, password }: UpdateUserRequest, id: string, userId: string): Promise<UserResponse> {
         if (!id) {
             throw new Error("User ID is required");
+        }
+
+        if (id !== userId) {
+            throw new Error("You can only update your own user data");
         }
 
         const existingUser = await this.userRepository.findById(id);
         if (!existingUser) {
             throw new Error("User not found");
         }
+
+        
 
         if (email) {
             const userWithEmail = await this.userRepository.findByEmail(email);

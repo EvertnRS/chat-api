@@ -84,4 +84,20 @@ async delete (deleteUser : DeleteUserRequest): Promise<void> {
 
     return data;
   }
+
+  async getAll(): Promise<UserResponse[]> {
+    const data = await postgres.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true
+      }
+    });
+
+    return data.map(user => ({
+      id: user.id,
+      name: user.name,
+      email: user.email
+    }));
+  }
 }

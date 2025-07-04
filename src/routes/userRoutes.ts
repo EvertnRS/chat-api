@@ -14,6 +14,7 @@ const authController = new AuthController(userRepository, jwtProvider);
 
 router.post('/signup', (req, res) => {userController.register(req, res)});
 router.post('/login', (req, res) => {authController.login(req, res)});
+router.get('/users/', authenticateToken(jwtProvider), (req, res) => {userController.listUser(req, res)});
 router.put('/users/update/:id', authenticateToken(jwtProvider), (req, res) =>{ userController.update(req, res)});
 router.delete('/users/delete/:id', authenticateToken(jwtProvider), (req, res) =>{ userController.delete(req, res)});
 
