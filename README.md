@@ -180,6 +180,27 @@ Principais eventos:
 | `receive_message` | Recebe uma nova mensagem              |
 | `disconnect`      | Encerra a conexão                     |
 
+### Swagger:
+
+acesse:
+
+http://localhost:3000/api-docs
+
+Na interface do Swagger, é possível:
+
+- Visualizar todas as rotas disponíveis;
+- Consultar os parâmetros e corpos das requisições;
+- Visualizar os formatos das respostas;
+- Autenticar utilizando um JWT através do botão Authorize;
+- Executar as requisições diretamente pela interface.
+- Autenticação
+
+As rotas protegidas utilizam autenticação Bearer JWT.
+
+Após realizar o login pela rota:
+
+copie o token retornado e clique em Authorize no Swagger.
+
 ## 📁 Estrutura do projeto
 
 ```text
