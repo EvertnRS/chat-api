@@ -282,3 +282,16 @@ Abra uma **Issue** informando:
 * **`CONTRIBUTING.md`:** guia para contribuição.
 * **`LICENSE`:** licença do projeto.
 
+---
+
+## 👥 Equipe
+
+<a href="https://github.com/EvertnRS">
+  <img width="100" height="100" alt="image" src="https://github.com/user-attachments/assets/840eeb2e-2866-4a83-a86b-e97a498bde9f" />
+</a>
+
+<a href="https://github.com/ok-kioo">
+  <img width="100" height="100" alt="image" src="https://github.com/user-attachments/assets/f7da043e-005d-4c5c-a4ab-75fdec3ed861" />
+</a>
+
+</a>
